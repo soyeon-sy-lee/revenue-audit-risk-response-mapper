@@ -1,0 +1,19 @@
+tag_id,tag_category,tag_code,tag_name_ko,description_ko,allowed_for,conflicts_with,source_level,review_status
+TAG001,account_cycle,revenue,매출,매출 거래 주기,risk|procedure|scenario,,educational_inference,ai_generated_unreviewed
+TAG002,account_cycle,accounts_receivable,매출채권,매출채권 잔액,risk|procedure|scenario,,educational_inference,ai_generated_unreviewed
+TAG003,risk_signal,year_end_concentration,기말 집중,결산일 전후 매출 집중,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG004,risk_signal,rapid_growth,급격한 증가,전년 대비 매출 또는 잔액 급증,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG005,risk_signal,customer_concentration,거래처 집중,특정 거래처 매출 집중,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG006,risk_signal,new_customer,신규 거래처,신규 거래처 대규모 거래,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG007,risk_signal,customer_acceptance_clause,고객 검수조건,검수 완료 조건 존재,risk|procedure|scenario,,educational_inference,ai_generated_unreviewed
+TAG008,risk_signal,unusual_contract_terms,비표준 계약조건,일반적이지 않은 수익 조건,risk|procedure|scenario,,educational_inference,ai_generated_unreviewed
+TAG009,risk_signal,post_period_return,기말 후 반품,기말 후 반품 증가,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG010,risk_signal,manual_entry,수기전표,수기 또는 비경상 매출분개,risk|procedure|scenario,automated_only,educational_inference,ai_generated_unreviewed
+TAG011,risk_signal,overdue_receivable,장기 미회수,장기 미회수 매출채권 증가,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG012,risk_signal,collection_slowdown,회수 지연,후속 현금회수 부진,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG013,risk_signal,related_party,특수관계자,특수관계자 거래,risk|procedure|scenario,,educational_inference,ai_generated_unreviewed
+TAG014,risk_signal,unusual_margin,비정상 마진,매출총이익률 비정상 변동,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG015,risk_signal,credit_memo_increase,대변전표 증가,기말 후 취소 또는 대변전표 증가,risk|scenario,,educational_inference,ai_generated_unreviewed
+TAG016,procedure_type,external_confirmation,외부조회,외부 확인 응답,procedure,,educational_inference,ai_generated_unreviewed
+TAG017,procedure_type,inspection,문서검사,계약서와 증빙 검사,procedure,,educational_inference,ai_generated_unreviewed
+TAG018,procedure_type,substantive_analytical_procedure,실증분석,분석적 절차,procedure,,educational_inference,ai_generated_unreviewed

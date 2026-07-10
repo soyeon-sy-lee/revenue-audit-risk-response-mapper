@@ -1,0 +1,51 @@
+mapping_id,risk_id,procedure_id,relevance_grade,relation_label,matched_assertions,required_conditions,rationale_ko,gap_if_omitted_ko,contraindication_ko,source_reference,source_level,review_status
+MAP001,RISK001,PROC001,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP002,RISK001,PROC002,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP003,RISK001,PROC005,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP004,RISK001,PROC007,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP005,RISK001,PROC010,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP006,RISK002,PROC007,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP007,RISK002,PROC008,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP008,RISK002,PROC002,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP009,RISK002,PROC004,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP010,RISK002,PROC010,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP011,RISK003,PROC007,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP012,RISK003,PROC004,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP013,RISK003,PROC002,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP014,RISK003,PROC008,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP015,RISK003,PROC006,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP016,RISK004,PROC002,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP017,RISK004,PROC003,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP018,RISK004,PROC004,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP019,RISK004,PROC007,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP020,RISK004,PROC010,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP021,RISK005,PROC001,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP022,RISK005,PROC002,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP023,RISK005,PROC005,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP024,RISK005,PROC007,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP025,RISK005,PROC010,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP026,RISK006,PROC005,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP027,RISK006,PROC002,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP028,RISK006,PROC008,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP029,RISK006,PROC004,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP030,RISK006,PROC006,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP031,RISK007,PROC006,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP032,RISK007,PROC002,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP033,RISK007,PROC008,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP034,RISK007,PROC004,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP035,RISK007,PROC010,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP036,RISK008,PROC010,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP037,RISK008,PROC003,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP038,RISK008,PROC004,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP039,RISK008,PROC007,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP040,RISK008,PROC006,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP041,RISK009,PROC009,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP042,RISK009,PROC002,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP043,RISK009,PROC004,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP044,RISK009,PROC008,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP045,RISK009,PROC010,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP046,RISK010,PROC008,3,core,cutoff|occurrence|accuracy|valuation|presentation,,위험의 주요 주장에 직접 연결되는 핵심 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP047,RISK010,PROC001,2,supporting,accuracy|occurrence|existence,,관련 증거를 보완하는 절차 후보입니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP048,RISK010,PROC007,1,conditional,accuracy|valuation|existence,,특정 조건이나 증거 이용 가능성에 따라 관련됩니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP049,RISK010,PROC002,0,weak_match,,,일부 태그만 겹치며 직접 대응관계는 약합니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed
+MAP050,RISK010,PROC004,-1,not_applicable,,,이 위험의 주요 왜곡 양상에는 일반적으로 직접 대응하지 않습니다.,해당 위험과 주장에 대한 직접 검토가 누락될 수 있습니다.,적용조건이 충족되지 않으면 보조적 단서로만 고려합니다.,,educational_inference,ai_generated_unreviewed

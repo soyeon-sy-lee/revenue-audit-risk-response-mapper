@@ -1,0 +1,15 @@
+weights:
+  account_cycle_match: 0.20
+  primary_assertion_match: 0.25
+  secondary_assertion_match: 0.10
+  risk_tag_similarity: 0.25
+  evidence_availability_match: 0.10
+  timing_match: 0.05
+  fraud_indicator_match: 0.05
+penalties:
+  unmet_required_condition: 0.25
+  exclusion_condition_hit: 0.75
+feedback:
+  max_adjustment: 0.10
+labels:
+  score_display_name_ko: "태그·규칙 기반 적합도 점수"

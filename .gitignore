@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.DS_Store
+models/*.joblib
+data/generated/*.csv
+data/generated/*.json
+!data/generated/.gitkeep
