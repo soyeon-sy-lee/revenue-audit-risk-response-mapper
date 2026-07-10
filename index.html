@@ -574,6 +574,242 @@
       gap: 14px;
     }
 
+    .review-workbench {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .workbench-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 12px 30px rgba(23, 33, 27, 0.06);
+      overflow: hidden;
+    }
+
+    .workbench-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #f1f5ef;
+      border-bottom: 1px solid var(--line);
+      font-weight: 900;
+    }
+
+    .workbench-body {
+      padding: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field-group label,
+    .field-title {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .help-text {
+      margin: -4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 112px;
+      padding: 12px;
+      resize: vertical;
+    }
+
+    select {
+      min-height: 42px;
+      padding: 9px 10px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .check-card {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      min-height: 42px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf9;
+      color: #34443c;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .check-card input {
+      margin-top: 2px;
+      accent-color: var(--green);
+    }
+
+    .check-card:has(input:checked) {
+      border-color: #9bc3ad;
+      background: var(--mint);
+    }
+
+    .review-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .button.secondary {
+      box-shadow: none;
+      cursor: pointer;
+    }
+
+    button.button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .output-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .output-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf9;
+      overflow: hidden;
+    }
+
+    .output-card h3 {
+      margin: 0;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f4f7f1;
+      font-size: 15px;
+    }
+
+    .output-card-content {
+      padding: 14px;
+    }
+
+    .coverage-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 86px;
+      gap: 10px;
+      align-items: center;
+      margin: 9px 0;
+      font-size: 13px;
+    }
+
+    .coverage-track {
+      height: 12px;
+      border-radius: 99px;
+      background: #e9eee9;
+      overflow: hidden;
+    }
+
+    .coverage-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--green);
+    }
+
+    .coverage-fill.partial {
+      background: var(--gold);
+    }
+
+    .coverage-fill.missing {
+      background: var(--red);
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 7px;
+      background: var(--mint);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .pill.warn {
+      background: var(--amber);
+      color: var(--gold);
+    }
+
+    .pill.danger {
+      background: var(--rose);
+      color: var(--red);
+    }
+
+    .output-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #35443c;
+    }
+
+    .output-list li {
+      margin: 8px 0;
+    }
+
+    .procedure-item {
+      display: grid;
+      gap: 5px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .procedure-item:last-child {
+      border-bottom: 0;
+    }
+
+    .procedure-item strong {
+      font-size: 14px;
+    }
+
+    .procedure-item span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .limit {
       padding: 18px;
       border: 1px solid var(--line);
@@ -620,13 +856,15 @@
 
       .hero-inner,
       .section-head,
-      .two-col {
+      .two-col,
+      .review-workbench {
         grid-template-columns: 1fr;
       }
 
       .metrics-grid,
       .pipeline,
-      .limits {
+      .limits,
+      .checkbox-grid {
         grid-template-columns: 1fr 1fr;
       }
 
@@ -642,7 +880,8 @@
 
       .metrics-grid,
       .pipeline,
-      .limits {
+      .limits,
+      .checkbox-grid {
         grid-template-columns: 1fr;
       }
 
@@ -663,6 +902,10 @@
       .split-grid {
         grid-template-columns: 1fr;
       }
+
+      .coverage-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -677,6 +920,7 @@
       <a href="#pipeline">생성 구조</a>
       <a href="#evidence">검증 결과</a>
       <a href="#demo">데모 흐름</a>
+      <a href="#coverage-tool">커버리지 점검</a>
       <a href="#limits">한계</a>
     </nav>
   </header>
@@ -693,7 +937,7 @@
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#summary">결과 보기</a>
-            <a class="button" href="#demo">추천 흐름 보기</a>
+            <a class="button" href="#coverage-tool">커버리지 점검하기</a>
           </div>
         </div>
 
@@ -990,6 +1234,96 @@
       </div>
     </section>
 
+    <section id="coverage-tool">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>커버리지 점검 도구</h2>
+          <p>
+            위험상황, 검증대상, 수행하려는 절차를 입력하면 주장별 대응 여부와
+            누락 가능성이 있는 절차를 규칙 기반으로 검토합니다.
+          </p>
+        </div>
+
+        <div class="review-workbench">
+          <form class="workbench-panel" id="coverageForm">
+            <div class="workbench-header">
+              <span>입력창</span>
+              <span class="status">education only</span>
+            </div>
+            <div class="workbench-body">
+              <div class="form-grid">
+                <div class="field-group">
+                  <label for="riskNarrative">위험상황</label>
+                  <textarea id="riskNarrative">결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.</textarea>
+                  <p class="help-text">자유문장과 아래 체크 항목을 함께 사용합니다.</p>
+                </div>
+
+                <div class="field-group">
+                  <span class="field-title">검증대상</span>
+                  <select id="accountCycle">
+                    <option value="revenue">매출 거래</option>
+                    <option value="accounts_receivable">매출채권 잔액</option>
+                    <option value="both">매출 및 매출채권</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <span class="field-title">위험징후</span>
+                  <div class="checkbox-grid" id="riskInputs">
+                    <label class="check-card"><input type="checkbox" value="year_end_concentration" checked>기말 매출 집중</label>
+                    <label class="check-card"><input type="checkbox" value="customer_acceptance_clause" checked>고객 검수조건</label>
+                    <label class="check-card"><input type="checkbox" value="rapid_growth">매출 급증</label>
+                    <label class="check-card"><input type="checkbox" value="new_customer">신규 거래처</label>
+                    <label class="check-card"><input type="checkbox" value="post_period_return" checked>기말 후 반품 증가</label>
+                    <label class="check-card"><input type="checkbox" value="manual_entry">수기 매출전표</label>
+                    <label class="check-card"><input type="checkbox" value="overdue_receivable">장기 미회수 채권</label>
+                    <label class="check-card"><input type="checkbox" value="related_party">특수관계자 거래</label>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <span class="field-title">수행하려는 절차</span>
+                  <div class="checkbox-grid" id="plannedInputs">
+                    <label class="check-card"><input type="checkbox" value="cutoff_test" checked>기말 전후 매출 컷오프 검사</label>
+                    <label class="check-card"><input type="checkbox" value="contract_review">계약서 주요 조건 검사</label>
+                    <label class="check-card"><input type="checkbox" value="subsequent_cash">후속 현금회수 대조</label>
+                    <label class="check-card"><input type="checkbox" value="ar_confirmation">매출채권 외부조회</label>
+                    <label class="check-card"><input type="checkbox" value="returns_credit_memo">기말 후 반품·대변전표 검사</label>
+                    <label class="check-card"><input type="checkbox" value="manual_journal_test">수기분개 상세 테스트</label>
+                    <label class="check-card"><input type="checkbox" value="customer_concentration_analysis">거래처별 매출 집중 분석</label>
+                    <label class="check-card"><input type="checkbox" value="aging_analysis">미회수 채권 연령 분석</label>
+                  </div>
+                </div>
+
+                <div class="review-actions">
+                  <button class="button primary" type="submit">커버리지 검토</button>
+                  <button class="button secondary" type="button" id="loadCutoffCase">기말 매출 예시</button>
+                  <button class="button secondary" type="button" id="loadReceivableCase">채권 회수 예시</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="workbench-panel" aria-live="polite">
+            <div class="workbench-header">
+              <span>출력창</span>
+              <span class="status ok" id="overallStatus">ready</span>
+            </div>
+            <div class="workbench-body">
+              <div class="output-grid" id="coverageOutput">
+                <div class="output-card">
+                  <h3>검토 결과</h3>
+                  <div class="output-card-content">
+                    <p class="help-text">왼쪽 입력값을 조정한 뒤 `커버리지 검토`를 누르면 결과가 표시됩니다.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="limits">
       <div class="section-inner">
         <div class="section-head">
@@ -1024,5 +1358,329 @@
       <span>Smoke dataset: 100 scenarios, 500 pairs, seed 42</span>
     </div>
   </footer>
+  <script>
+    const assertionLabels = {
+      cutoff: "기간귀속",
+      occurrence: "발생사실",
+      accuracy: "정확성",
+      existence: "실재성",
+      valuation: "평가",
+      presentation: "표시",
+      classification: "분류",
+      rights_and_obligations: "권리와 의무"
+    };
+
+    const riskRules = {
+      year_end_concentration: {
+        name: "기말 매출 집중",
+        assertions: ["cutoff", "occurrence", "accuracy"],
+        questions: [
+          "증가는 특정 월 또는 결산일 직전에 집중됐습니까?",
+          "출고일, 고객 인수일, 검수일, 수익인식일을 비교할 자료가 있습니까?",
+          "기말 후 반품 또는 대변전표가 증가했습니까?"
+        ],
+        requiredProcedures: ["cutoff_test"],
+        suggestedProcedures: ["contract_review", "returns_credit_memo"],
+        warning: "기말 매출 집중 위험이 있으므로 기말 전후 거래의 기간귀속을 직접 검토하는 절차가 선택되었는지 확인이 필요합니다."
+      },
+      customer_acceptance_clause: {
+        name: "고객 검수조건",
+        assertions: ["cutoff", "occurrence", "accuracy"],
+        questions: [
+          "계약상 고객 검수 완료가 수익인식 조건입니까?",
+          "검수 완료일과 수익인식일을 대조할 수 있습니까?"
+        ],
+        requiredProcedures: ["contract_review", "cutoff_test"],
+        suggestedProcedures: ["returns_credit_memo"],
+        warning: "고객 검수조건이 있으므로 계약 조건과 검수 완료일을 수익인식일과 비교하는 절차를 검토해야 합니다."
+      },
+      rapid_growth: {
+        name: "매출 급증",
+        assertions: ["occurrence", "accuracy", "cutoff"],
+        questions: [
+          "수량 증가와 단가 상승 중 어느 요인이 큽니까?",
+          "신규 거래처 또는 특정 거래처에서 증가가 집중됐습니까?",
+          "매출채권과 영업현금흐름도 함께 증가했습니까?"
+        ],
+        requiredProcedures: ["customer_concentration_analysis"],
+        suggestedProcedures: ["contract_review", "subsequent_cash"],
+        warning: "매출 급증은 원인 분석만으로 충분하지 않으므로 주요 거래의 발생사실과 정확성을 뒷받침하는 절차가 필요할 수 있습니다."
+      },
+      new_customer: {
+        name: "신규 거래처",
+        assertions: ["occurrence", "cutoff", "accuracy"],
+        questions: [
+          "신규 거래처의 신용상태와 거래 조건을 확인했습니까?",
+          "후속 현금회수 또는 외부 증거를 확보할 수 있습니까?"
+        ],
+        requiredProcedures: ["contract_review"],
+        suggestedProcedures: ["subsequent_cash", "ar_confirmation"],
+        warning: "신규 거래처 대규모 매출은 거래 실재성과 조건 충족 여부를 함께 검토할 필요가 있습니다."
+      },
+      post_period_return: {
+        name: "기말 후 반품 증가",
+        assertions: ["accuracy", "cutoff", "valuation"],
+        questions: [
+          "기말 후 반품, 취소 또는 대변전표가 원거래와 연결됩니까?",
+          "반품권 또는 취소권이 계약 조건에 포함되어 있습니까?"
+        ],
+        requiredProcedures: ["returns_credit_memo"],
+        suggestedProcedures: ["contract_review"],
+        warning: "기말 후 반품 증가가 있으면 기말 매출의 정확성, 기간귀속, 평가 관련 검토가 필요할 수 있습니다."
+      },
+      manual_entry: {
+        name: "수기 매출전표",
+        assertions: ["occurrence", "accuracy", "classification"],
+        questions: [
+          "수기전표의 승인자, 입력 사유, 근거 문서를 확인했습니까?",
+          "비경상 분개가 목표달성 직전 기간에 집중됐습니까?"
+        ],
+        requiredProcedures: ["manual_journal_test"],
+        suggestedProcedures: ["contract_review"],
+        warning: "수기 매출전표가 포함되어 있으면 승인과 근거 문서에 대한 상세 검토가 누락되지 않았는지 확인이 필요합니다."
+      },
+      overdue_receivable: {
+        name: "장기 미회수 채권",
+        assertions: ["valuation", "existence"],
+        questions: [
+          "기말 후 현금회수 내역이 있습니까?",
+          "거래처 분쟁, 재무상태 악화, 지급 지연 사유가 확인됐습니까?"
+        ],
+        requiredProcedures: ["aging_analysis"],
+        suggestedProcedures: ["subsequent_cash", "ar_confirmation"],
+        warning: "장기 미회수 채권은 실재성뿐 아니라 평가충당금 관련 검토가 필요할 수 있습니다."
+      },
+      related_party: {
+        name: "특수관계자 거래",
+        assertions: ["presentation", "occurrence", "rights_and_obligations"],
+        questions: [
+          "특수관계자 식별과 승인 절차를 확인했습니까?",
+          "거래 조건의 통상성과 표시 필요성을 검토했습니까?"
+        ],
+        requiredProcedures: ["contract_review"],
+        suggestedProcedures: ["ar_confirmation"],
+        warning: "특수관계자 거래는 발생사실뿐 아니라 표시와 거래조건 검토가 필요합니다."
+      }
+    };
+
+    const procedureRules = {
+      cutoff_test: {
+        name: "기말 전후 매출 컷오프 검사",
+        assertions: ["cutoff", "occurrence", "accuracy"],
+        directRisks: ["year_end_concentration", "customer_acceptance_clause"],
+        note: "출고일, 고객 인수일, 검수일, 수익인식일을 비교합니다."
+      },
+      contract_review: {
+        name: "계약서 주요 조건 검사",
+        assertions: ["occurrence", "accuracy", "cutoff", "presentation"],
+        directRisks: ["customer_acceptance_clause", "new_customer", "related_party"],
+        note: "검수조건, 반품권, 취소권, 비표준 조건을 확인합니다."
+      },
+      subsequent_cash: {
+        name: "후속 현금회수 대조",
+        assertions: ["existence", "valuation", "occurrence"],
+        directRisks: ["overdue_receivable", "new_customer"],
+        note: "후속 현금회수를 매출채권 및 주요 거래와 대조합니다."
+      },
+      ar_confirmation: {
+        name: "매출채권 외부조회",
+        assertions: ["existence", "rights_and_obligations"],
+        directRisks: ["overdue_receivable", "new_customer"],
+        note: "매출채권 실재성 관련 외부 증거를 확보합니다."
+      },
+      returns_credit_memo: {
+        name: "기말 후 반품·대변전표 검사",
+        assertions: ["accuracy", "cutoff", "valuation"],
+        directRisks: ["post_period_return", "year_end_concentration"],
+        note: "기말 후 반품, 취소, 대변전표를 원거래와 대조합니다."
+      },
+      manual_journal_test: {
+        name: "수기분개 상세 테스트",
+        assertions: ["occurrence", "accuracy", "classification"],
+        directRisks: ["manual_entry"],
+        note: "수기 매출전표의 승인, 근거, 계정분류를 확인합니다."
+      },
+      customer_concentration_analysis: {
+        name: "거래처별 매출 집중 분석",
+        assertions: ["accuracy", "presentation"],
+        directRisks: ["rapid_growth", "new_customer"],
+        note: "거래처별 비중과 전년 대비 변동을 분석합니다."
+      },
+      aging_analysis: {
+        name: "미회수 채권 연령 분석",
+        assertions: ["valuation", "existence"],
+        directRisks: ["overdue_receivable"],
+        note: "채권 연령과 후속 회수, 분쟁 여부를 분석합니다."
+      }
+    };
+
+    const accountAssertionDefaults = {
+      revenue: ["occurrence", "accuracy", "cutoff"],
+      accounts_receivable: ["existence", "valuation", "rights_and_obligations"],
+      both: ["occurrence", "accuracy", "cutoff", "existence", "valuation"]
+    };
+
+    function checkedValues(containerId) {
+      return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map((input) => input.value);
+    }
+
+    function setChecked(containerId, values) {
+      const wanted = new Set(values);
+      document.querySelectorAll(`#${containerId} input`).forEach((input) => {
+        input.checked = wanted.has(input.value);
+      });
+    }
+
+    function unique(items) {
+      return Array.from(new Set(items.filter(Boolean)));
+    }
+
+    function labelAssertion(assertion) {
+      return assertionLabels[assertion] || assertion;
+    }
+
+    function renderCoverageRow(assertion, level, ratio) {
+      const fillClass = level === "직접 대응" ? "" : level === "일부 대응" ? "partial" : "missing";
+      return `
+        <div class="coverage-row">
+          <strong>${labelAssertion(assertion)}</strong>
+          <div class="coverage-track"><div class="coverage-fill ${fillClass}" style="width: ${ratio}%"></div></div>
+          <span>${level}</span>
+        </div>
+      `;
+    }
+
+    function renderList(items, emptyText) {
+      if (!items.length) {
+        return `<p class="help-text">${emptyText}</p>`;
+      }
+      return `<ul class="output-list">${items.map((item) => `<li>${item}</li>`).join("")}</ul>`;
+    }
+
+    function reviewCoverage(event) {
+      if (event) {
+        event.preventDefault();
+      }
+
+      const accountCycle = document.getElementById("accountCycle").value;
+      const risks = checkedValues("riskInputs");
+      const planned = checkedValues("plannedInputs");
+      const narrative = document.getElementById("riskNarrative").value.trim();
+
+      const targetAssertions = unique([
+        ...accountAssertionDefaults[accountCycle],
+        ...risks.flatMap((risk) => riskRules[risk].assertions)
+      ]);
+      const plannedAssertions = unique(planned.flatMap((procedure) => procedureRules[procedure].assertions));
+      const coveredRisks = new Set(planned.flatMap((procedure) => procedureRules[procedure].directRisks));
+      const missingAssertions = targetAssertions.filter((assertion) => !plannedAssertions.includes(assertion));
+      const partiallyCovered = targetAssertions.filter((assertion) => plannedAssertions.includes(assertion));
+      const missingCoreProcedures = unique(risks.flatMap((risk) => {
+        return riskRules[risk].requiredProcedures.filter((procedure) => !planned.includes(procedure));
+      }));
+      const suggestedProcedures = unique([
+        ...missingCoreProcedures,
+        ...risks.flatMap((risk) => riskRules[risk].suggestedProcedures)
+      ]).filter((procedure) => !planned.includes(procedure));
+      const questions = unique(risks.flatMap((risk) => riskRules[risk].questions));
+      const warnings = unique([
+        ...risks
+          .filter((risk) => !riskRules[risk].requiredProcedures.every((procedure) => planned.includes(procedure)))
+          .map((risk) => riskRules[risk].warning),
+        ...missingAssertions.map((assertion) => `${labelAssertion(assertion)} 주장에 직접 대응하는 절차가 선택되지 않았는지 검토가 필요합니다.`)
+      ]);
+
+      const coverageScore = targetAssertions.length
+        ? Math.round((partiallyCovered.length / targetAssertions.length) * 100)
+        : 0;
+      const overallStatus = document.getElementById("overallStatus");
+      overallStatus.textContent = coverageScore >= 80 && warnings.length === 0 ? "coverage ok" : "review needed";
+      overallStatus.className = coverageScore >= 80 && warnings.length === 0 ? "status ok" : "status warn";
+
+      const coverageRows = targetAssertions.map((assertion) => {
+        const hasCoverage = plannedAssertions.includes(assertion);
+        const directRiskMatch = risks.some((risk) => {
+          return planned.some((procedure) => procedureRules[procedure].directRisks.includes(risk) && procedureRules[procedure].assertions.includes(assertion));
+        });
+        const level = directRiskMatch ? "직접 대응" : hasCoverage ? "일부 대응" : "누락 검토";
+        const ratio = directRiskMatch ? 100 : hasCoverage ? 56 : 18;
+        return renderCoverageRow(assertion, level, ratio);
+      }).join("");
+
+      const riskPills = risks.map((risk) => `<span class="pill">${riskRules[risk].name}</span>`).join("");
+      const assertionPills = targetAssertions.map((assertion) => {
+        const cls = missingAssertions.includes(assertion) ? "pill danger" : "pill";
+        return `<span class="${cls}">${labelAssertion(assertion)}</span>`;
+      }).join("");
+
+      const procedureHtml = suggestedProcedures.length
+        ? suggestedProcedures.map((procedure) => `
+            <div class="procedure-item">
+              <strong>${procedureRules[procedure].name}</strong>
+              <span>${procedureRules[procedure].note}</span>
+            </div>
+          `).join("")
+        : `<p class="help-text">현재 선택한 위험징후 기준으로 즉시 추가 검토할 핵심 후보는 표시되지 않습니다.</p>`;
+
+      const weakCaution = planned.includes("ar_confirmation") && risks.includes("year_end_concentration")
+        ? ["외부조회는 매출채권 실재성 관련 증거를 제공할 수 있으나, 수익인식 시점 검토를 직접 대체하지 않을 수 있습니다."]
+        : [];
+
+      document.getElementById("coverageOutput").innerHTML = `
+        <div class="output-card">
+          <h3>요약 판단</h3>
+          <div class="output-card-content">
+            <p><strong>커버리지 점수 ${coverageScore}%</strong> · 이 점수는 감사절차의 정답 확률이 아니라 입력된 태그와 규칙에 따른 검토 지표입니다.</p>
+            <div class="pill-list">${riskPills || '<span class="pill warn">위험징후 미선택</span>'}</div>
+            <div class="pill-list">${assertionPills}</div>
+          </div>
+        </div>
+
+        <div class="output-card">
+          <h3>주장별 커버리지</h3>
+          <div class="output-card-content">${coverageRows}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>누락 가능 절차</h3>
+          <div class="output-card-content">${procedureHtml}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>추가 확인 질문</h3>
+          <div class="output-card-content">${renderList(questions, "현재 선택 항목만으로 추가 질문이 생성되지 않았습니다.")}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>검토 경고</h3>
+          <div class="output-card-content">${renderList([...warnings, ...weakCaution], "선택한 계획 절차에서 즉시 표시할 경고는 없습니다.")}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>입력 스냅샷</h3>
+          <div class="output-card-content">
+            <p class="help-text">${narrative || "자유문장 입력 없음"}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById("coverageForm").addEventListener("submit", reviewCoverage);
+    document.getElementById("loadCutoffCase").addEventListener("click", () => {
+      document.getElementById("riskNarrative").value = "결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.";
+      document.getElementById("accountCycle").value = "revenue";
+      setChecked("riskInputs", ["year_end_concentration", "customer_acceptance_clause", "post_period_return"]);
+      setChecked("plannedInputs", ["cutoff_test"]);
+      reviewCoverage();
+    });
+    document.getElementById("loadReceivableCase").addEventListener("click", () => {
+      document.getElementById("riskNarrative").value = "신규 거래처 매출채권의 후속 현금회수가 지연되고 장기 미회수 잔액이 증가했습니다.";
+      document.getElementById("accountCycle").value = "accounts_receivable";
+      setChecked("riskInputs", ["new_customer", "overdue_receivable"]);
+      setChecked("plannedInputs", ["ar_confirmation"]);
+      reviewCoverage();
+    });
+    reviewCoverage();
+  </script>
 </body>
 </html>
