@@ -1874,19 +1874,29 @@
           return (right.baseScore + right.adjustment) - (left.baseScore + left.adjustment);
         });
       const questions = unique(risks.flatMap((risk) => riskRules[risk].questions));
-      const warnings = unique([
+      const riskResponseWarnings = unique([
         ...risks
           .filter((risk) => !riskRules[risk].requiredProcedures.every((procedure) => planned.includes(procedure)))
-          .map((risk) => riskRules[risk].warning),
-        ...missingAssertions.map((assertion) => `${labelAssertion(assertion)} 주장에 직접 대응하는 절차가 선택되지 않았는지 검토가 필요합니다.`)
+          .map((risk) => riskRules[risk].warning)
+      ]);
+      const assertionWarnings = missingAssertions.map((assertion) => `${labelAssertion(assertion)} 주장에 직접 대응하는 절차가 선택되지 않았는지 검토가 필요합니다.`);
+      const weaklyRelatedPlanned = planned.filter((procedure) => {
+        const directRisks = procedureRules[procedure].directRisks;
+        return risks.length > 0 && !directRisks.some((risk) => risks.includes(risk));
+      });
+      const selectionCautions = unique([
+        ...weaklyRelatedPlanned.map((procedure) => `${procedureRules[procedure].name}: 현재 선택된 위험징후와 직접 연결되는 절차는 아닐 수 있습니다.`),
+        planned.length >= Object.keys(procedureRules).length
+          ? "모든 절차가 선택되어 있습니다. 누락 방지에는 도움이 되지만, 실제 감사계획에서는 위험과 주장에 직접 연결되는 절차 중심으로 우선순위를 검토해야 합니다."
+          : ""
       ]);
 
-      const coverageScore = targetAssertions.length
+      const assertionCoverageScore = targetAssertions.length
         ? Math.round((partiallyCovered.length / targetAssertions.length) * 100)
         : 0;
       const overallStatus = document.getElementById("overallStatus");
-      overallStatus.textContent = coverageScore >= 80 && warnings.length === 0 ? "coverage ok" : "review needed";
-      overallStatus.className = coverageScore >= 80 && warnings.length === 0 ? "status ok" : "status warn";
+      overallStatus.textContent = missingAssertions.length === 0 ? "assertion coverage ok" : "assertion review needed";
+      overallStatus.className = missingAssertions.length === 0 ? "status ok" : "status warn";
 
       const coverageRows = targetAssertions.map((assertion) => {
         const hasCoverage = plannedAssertions.includes(assertion);
@@ -1936,7 +1946,7 @@
         <div class="output-card">
           <h3>요약 판단</h3>
           <div class="output-card-content">
-            <p><strong>커버리지 점수 ${coverageScore}%</strong> · 이 점수는 감사절차의 정답 확률이 아니라 입력된 태그와 규칙에 따른 검토 지표입니다.</p>
+            <p><strong>주장 커버리지 점수 ${assertionCoverageScore}%</strong> · 이 점수는 선택한 절차가 관련 경영진 주장을 얼마나 포함하는지 보는 지표이며, 절차를 많이 선택했다는 이유로 감점하지 않습니다.</p>
             <div class="pill-list">${riskPills || '<span class="pill warn">위험징후 미선택</span>'}</div>
             <div class="pill-list">${assertionPills}</div>
           </div>
@@ -1950,6 +1960,13 @@
         <div class="output-card">
           <h3>누락 가능 절차</h3>
           <div class="output-card-content">${procedureHtml}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>위험 대응 및 과잉 선택 점검</h3>
+          <div class="output-card-content">
+            ${renderList([...riskResponseWarnings, ...selectionCautions], "위험별 핵심 절차 누락 또는 과잉 선택 경고는 없습니다.")}
+          </div>
         </div>
 
         <div class="output-card">
@@ -1970,7 +1987,7 @@
 
         <div class="output-card">
           <h3>검토 경고</h3>
-          <div class="output-card-content">${renderList([...warnings, ...weakCaution], "선택한 계획 절차에서 즉시 표시할 경고는 없습니다.")}</div>
+          <div class="output-card-content">${renderList([...assertionWarnings, ...weakCaution], "선택한 계획 절차에서 즉시 표시할 주장 관련 경고는 없습니다.")}</div>
         </div>
 
         <div class="output-card">
