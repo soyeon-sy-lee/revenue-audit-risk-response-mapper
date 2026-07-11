@@ -49,7 +49,7 @@ streamlit run app.py
 
 ## 결과물 웹페이지
 
-공개 URL: https://soyeon-sy-lee.github.io/revenue-audit-risk-response-mapper/
+공개 URL: https://soyeon-sy-lee.github.io/revenue-audit-risk-response-mapper/index.html
 
 브라우저에서 `index.html`을 직접 열면 프로젝트 결과 요약 페이지를 볼 수 있습니다. 이 페이지는 smoke 데이터 생성 결과, 클래스 분포, 검증 통과 항목, 데모 흐름과 한계를 정리합니다.
 위험상황 텍스트를 입력하면 키워드 기반으로 기본 위험징후를 자동 체크할 수 있으며, 자동 체크 옵션을 끄면 회계사가 모든 위험징후를 직접 선택할 수 있습니다.
