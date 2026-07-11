@@ -810,6 +810,75 @@
       font-size: 13px;
     }
 
+    .procedure-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .learned-score {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .feedback-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 6px;
+    }
+
+    .feedback-button {
+      min-height: 30px;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--slate);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .feedback-button:hover {
+      border-color: #9bc3ad;
+      background: var(--mint);
+      color: var(--green);
+    }
+
+    .learning-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .learning-stat {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .learning-stat strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .learning-stat span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
     .limit {
       padding: 18px;
       border: 1px solid var(--line);
@@ -905,6 +974,10 @@
 
       .coverage-row {
         grid-template-columns: 1fr;
+      }
+
+      .learning-summary {
+        grid-template-columns: 1fr 1fr;
       }
     }
   </style>
@@ -1520,6 +1593,13 @@
       both: ["occurrence", "accuracy", "cutoff", "existence", "valuation"]
     };
 
+    const feedbackStorageKey = "revenueAuditMapperFeedback.v1";
+    let currentReviewState = {
+      risks: [],
+      accountCycle: "revenue",
+      suggestedProcedures: []
+    };
+
     function checkedValues(containerId) {
       return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map((input) => input.value);
     }
@@ -1537,6 +1617,85 @@
 
     function labelAssertion(assertion) {
       return assertionLabels[assertion] || assertion;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function loadFeedback() {
+      try {
+        return JSON.parse(localStorage.getItem(feedbackStorageKey)) || [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveFeedbackItem(item) {
+      const feedback = loadFeedback();
+      feedback.push({
+        ...item,
+        createdAt: new Date().toISOString(),
+        source: "local_browser_feedback"
+      });
+      localStorage.setItem(feedbackStorageKey, JSON.stringify(feedback.slice(-200)));
+    }
+
+    function feedbackCounts() {
+      return loadFeedback().reduce((acc, item) => {
+        acc[item.feedbackType] = (acc[item.feedbackType] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function feedbackAdjustment(procedure, risks, accountCycle) {
+      const relevantFeedback = loadFeedback().filter((item) => {
+        const sameProcedure = item.procedure === procedure;
+        const sameAccount = item.accountCycle === accountCycle;
+        const riskOverlap = item.risks.some((risk) => risks.includes(risk));
+        return sameProcedure && sameAccount && riskOverlap;
+      });
+      const rawScore = relevantFeedback.reduce((score, item) => {
+        if (item.feedbackType === "helpful") return score + 0.12;
+        if (item.feedbackType === "relevant_but_lower_priority") return score - 0.04;
+        if (item.feedbackType === "not_applicable_to_case") return score - 0.12;
+        if (item.feedbackType === "needs_more_information") return score - 0.02;
+        return score;
+      }, 0);
+      return Math.max(-0.25, Math.min(0.25, rawScore));
+    }
+
+    function baseProcedureScore(procedure, risks) {
+      const rule = procedureRules[procedure];
+      const directMatches = rule.directRisks.filter((risk) => risks.includes(risk)).length;
+      const requiredMatches = risks.filter((risk) => riskRules[risk].requiredProcedures.includes(procedure)).length;
+      return requiredMatches * 2 + directMatches;
+    }
+
+    function feedbackLabel(type) {
+      return {
+        helpful: "도움됨",
+        relevant_but_lower_priority: "관련 있지만 낮은 우선순위",
+        not_applicable_to_case: "이 사례에는 부적합",
+        needs_more_information: "정보 더 필요"
+      }[type] || type;
+    }
+
+    function renderLearningSummary() {
+      const counts = feedbackCounts();
+      return `
+        <div class="learning-summary">
+          <div class="learning-stat"><strong>${counts.helpful || 0}</strong><span>도움됨</span></div>
+          <div class="learning-stat"><strong>${counts.relevant_but_lower_priority || 0}</strong><span>낮은 우선순위</span></div>
+          <div class="learning-stat"><strong>${counts.not_applicable_to_case || 0}</strong><span>부적합</span></div>
+          <div class="learning-stat"><strong>${counts.needs_more_information || 0}</strong><span>정보 필요</span></div>
+        </div>
+      `;
     }
 
     function renderCoverageRow(assertion, level, ratio) {
@@ -1581,7 +1740,16 @@
       const suggestedProcedures = unique([
         ...missingCoreProcedures,
         ...risks.flatMap((risk) => riskRules[risk].suggestedProcedures)
-      ]).filter((procedure) => !planned.includes(procedure));
+      ])
+        .filter((procedure) => !planned.includes(procedure))
+        .map((procedure) => ({
+          procedure,
+          baseScore: baseProcedureScore(procedure, risks),
+          adjustment: feedbackAdjustment(procedure, risks, accountCycle)
+        }))
+        .sort((left, right) => {
+          return (right.baseScore + right.adjustment) - (left.baseScore + left.adjustment);
+        });
       const questions = unique(risks.flatMap((risk) => riskRules[risk].questions));
       const warnings = unique([
         ...risks
@@ -1613,11 +1781,26 @@
         return `<span class="${cls}">${labelAssertion(assertion)}</span>`;
       }).join("");
 
+      currentReviewState = {
+        risks,
+        accountCycle,
+        suggestedProcedures: suggestedProcedures.map((item) => item.procedure)
+      };
+
       const procedureHtml = suggestedProcedures.length
-        ? suggestedProcedures.map((procedure) => `
+        ? suggestedProcedures.map(({ procedure, adjustment }) => `
             <div class="procedure-item">
-              <strong>${procedureRules[procedure].name}</strong>
+              <div class="procedure-topline">
+                <strong>${procedureRules[procedure].name}</strong>
+                <span class="learned-score">학습 보정 ${adjustment >= 0 ? "+" : ""}${adjustment.toFixed(2)}</span>
+              </div>
               <span>${procedureRules[procedure].note}</span>
+              <div class="feedback-actions" aria-label="${procedureRules[procedure].name} 평가">
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="helpful">도움됨</button>
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="relevant_but_lower_priority">낮은 우선순위</button>
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="not_applicable_to_case">부적합</button>
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="needs_more_information">정보 필요</button>
+              </div>
             </div>
           `).join("")
         : `<p class="help-text">현재 선택한 위험징후 기준으로 즉시 추가 검토할 핵심 후보는 표시되지 않습니다.</p>`;
@@ -1647,6 +1830,17 @@
         </div>
 
         <div class="output-card">
+          <h3>사용자 평가 기반 로컬 학습</h3>
+          <div class="output-card-content">
+            <p class="help-text">평가는 이 브라우저에만 저장되며, 다음 추천 정렬에 최대 ±0.25 범위로만 반영됩니다. 감사 주장 매핑이나 절차 정의는 자동 변경하지 않습니다.</p>
+            ${renderLearningSummary()}
+            <div class="review-actions" style="margin-top: 12px;">
+              <button class="button secondary" type="button" id="resetLearning">학습 기록 초기화</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="output-card">
           <h3>추가 확인 질문</h3>
           <div class="output-card-content">${renderList(questions, "현재 선택 항목만으로 추가 질문이 생성되지 않았습니다.")}</div>
         </div>
@@ -1659,13 +1853,36 @@
         <div class="output-card">
           <h3>입력 스냅샷</h3>
           <div class="output-card-content">
-            <p class="help-text">${narrative || "자유문장 입력 없음"}</p>
+            <p class="help-text">${escapeHtml(narrative || "자유문장 입력 없음")}</p>
           </div>
         </div>
       `;
     }
 
     document.getElementById("coverageForm").addEventListener("submit", reviewCoverage);
+    document.getElementById("coverageOutput").addEventListener("click", (event) => {
+      const feedbackButton = event.target.closest(".feedback-button");
+      if (feedbackButton) {
+        const procedure = feedbackButton.dataset.procedure;
+        const feedbackType = feedbackButton.dataset.feedback;
+        saveFeedbackItem({
+          procedure,
+          procedureName: procedureRules[procedure].name,
+          feedbackType,
+          risks: currentReviewState.risks,
+          accountCycle: currentReviewState.accountCycle,
+          suggestedProcedures: currentReviewState.suggestedProcedures
+        });
+        feedbackButton.textContent = `${feedbackLabel(feedbackType)} 저장됨`;
+        reviewCoverage();
+        return;
+      }
+
+      if (event.target.closest("#resetLearning")) {
+        localStorage.removeItem(feedbackStorageKey);
+        reviewCoverage();
+      }
+    });
     document.getElementById("loadCutoffCase").addEventListener("click", () => {
       document.getElementById("riskNarrative").value = "결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.";
       document.getElementById("accountCycle").value = "revenue";
