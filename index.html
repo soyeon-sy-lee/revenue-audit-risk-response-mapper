@@ -714,6 +714,17 @@
       cursor: pointer;
     }
 
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .mode-toggle {
+      max-width: 360px;
+      min-height: 38px;
+      background: #fff;
+    }
+
     .output-grid {
       display: grid;
       gap: 14px;
@@ -1346,6 +1357,10 @@
                   <label for="riskNarrative">위험상황</label>
                   <textarea id="riskNarrative">결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.</textarea>
                   <p class="help-text">자유문장과 아래 체크 항목을 함께 사용합니다.</p>
+                  <label class="check-card mode-toggle">
+                    <input type="checkbox" id="autoDetectEnabled" checked>
+                    기본 위험징후 자동 체크 사용
+                  </label>
                   <div class="auto-detect-note" id="autoDetectNote">
                     <span>텍스트를 입력하면 기본 위험징후를 자동 제안합니다. 회계사 판단에 따라 체크를 추가하거나 해제할 수 있습니다.</span>
                   </div>
@@ -1653,6 +1668,10 @@
       return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map((input) => input.value);
     }
 
+    function isAutoDetectEnabled() {
+      return document.getElementById("autoDetectEnabled").checked;
+    }
+
     function setChecked(containerId, values) {
       const wanted = new Set(values);
       document.querySelectorAll(`#${containerId} input`).forEach((input) => {
@@ -1756,8 +1775,26 @@
       `;
     }
 
+    function updateAutoDetectControls() {
+      const enabled = isAutoDetectEnabled();
+      const note = document.getElementById("autoDetectNote");
+      const detectButton = document.getElementById("detectRisks");
+      detectButton.disabled = !enabled;
+      if (!enabled) {
+        note.innerHTML = "<span><strong>수동 모드:</strong> 위험징후 체크는 자동 변경되지 않습니다. 회계사 판단으로 직접 체크해 주세요.</span>";
+      }
+    }
+
     function detectRisksFromText(options = {}) {
       const { overwrite = true, shouldReview = true } = options;
+      if (!isAutoDetectEnabled()) {
+        updateAutoDetectControls();
+        if (shouldReview) {
+          reviewCoverage();
+        }
+        return checkedValues("riskInputs");
+      }
+
       const narrative = document.getElementById("riskNarrative").value.toLowerCase();
       const detected = Object.entries(riskKeywordRules)
         .filter(([, keywords]) => keywords.some((keyword) => narrative.includes(keyword.toLowerCase())))
@@ -1780,6 +1817,7 @@
       if (shouldReview) {
         reviewCoverage();
       }
+      updateAutoDetectControls();
       return detected;
     }
 
@@ -1971,8 +2009,21 @@
     document.getElementById("riskNarrative").addEventListener("input", () => {
       window.clearTimeout(autoDetectTimer);
       autoDetectTimer = window.setTimeout(() => {
-        detectRisksFromText({ overwrite: true, shouldReview: true });
+        if (isAutoDetectEnabled()) {
+          detectRisksFromText({ overwrite: true, shouldReview: true });
+        } else {
+          updateAutoDetectControls();
+          reviewCoverage();
+        }
       }, 500);
+    });
+    document.getElementById("autoDetectEnabled").addEventListener("change", () => {
+      updateAutoDetectControls();
+      if (isAutoDetectEnabled()) {
+        detectRisksFromText({ overwrite: true, shouldReview: true });
+      } else {
+        reviewCoverage();
+      }
     });
     document.getElementById("detectRisks").addEventListener("click", () => {
       detectRisksFromText({ overwrite: true, shouldReview: true });
@@ -1981,14 +2032,25 @@
       document.getElementById("riskNarrative").value = "결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.";
       document.getElementById("accountCycle").value = "revenue";
       setChecked("plannedInputs", ["cutoff_test"]);
-      detectRisksFromText({ overwrite: true, shouldReview: true });
+      if (isAutoDetectEnabled()) {
+        detectRisksFromText({ overwrite: true, shouldReview: true });
+      } else {
+        updateAutoDetectControls();
+        reviewCoverage();
+      }
     });
     document.getElementById("loadReceivableCase").addEventListener("click", () => {
       document.getElementById("riskNarrative").value = "신규 거래처 매출채권의 후속 현금회수가 지연되고 장기 미회수 잔액이 증가했습니다.";
       document.getElementById("accountCycle").value = "accounts_receivable";
       setChecked("plannedInputs", ["ar_confirmation"]);
-      detectRisksFromText({ overwrite: true, shouldReview: true });
+      if (isAutoDetectEnabled()) {
+        detectRisksFromText({ overwrite: true, shouldReview: true });
+      } else {
+        updateAutoDetectControls();
+        reviewCoverage();
+      }
     });
+    updateAutoDetectControls();
     detectRisksFromText({ overwrite: true, shouldReview: true });
   </script>
 </body>
