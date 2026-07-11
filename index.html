@@ -101,6 +101,45 @@
 
     main {
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #coverage-tool {
+      order: 1;
+    }
+
+    .project-details {
+      order: 2;
+      border-bottom: 1px solid var(--line);
+      background: #eef2ed;
+    }
+
+    .project-details.secondary {
+      order: 3;
+    }
+
+    .project-details summary {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px clamp(18px, 5vw, 72px);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 900;
+      list-style-position: inside;
+    }
+
+    .project-details summary span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .project-details[open] summary {
+      border-bottom: 1px solid var(--line);
     }
 
     .hero {
@@ -1056,16 +1095,19 @@
       <span>Risk-Response Mapper</span>
     </a>
     <nav aria-label="페이지 섹션">
-      <a href="#summary">요약</a>
-      <a href="#pipeline">생성 구조</a>
-      <a href="#evidence">검증 결과</a>
-      <a href="#demo">데모 흐름</a>
       <a href="#coverage-tool">커버리지 점검</a>
-      <a href="#limits">한계</a>
+      <a href="#project-details">프로젝트 설명</a>
+      <a href="#limits-details">한계</a>
     </nav>
   </header>
 
   <main id="top">
+    <details class="project-details" id="project-details">
+      <summary>
+        프로젝트 설명 보기
+        <span>요약, 생성 구조, 검증 결과, 데모 흐름은 필요할 때 펼쳐서 확인합니다.</span>
+      </summary>
+
     <section class="hero">
       <div class="hero-inner">
         <div>
@@ -1374,6 +1416,8 @@
       </div>
     </section>
 
+    </details>
+
     <section id="coverage-tool">
       <div class="section-inner">
         <div class="section-head">
@@ -1472,6 +1516,12 @@
       </div>
     </section>
 
+    <details class="project-details secondary" id="limits-details">
+      <summary>
+        한계와 다음 단계 보기
+        <span>전문적 판단 대체 금지, 합성 데이터 한계, 확장 계획을 확인합니다.</span>
+      </summary>
+
     <section id="limits">
       <div class="section-inner">
         <div class="section-head">
@@ -1498,6 +1548,8 @@
         </div>
       </div>
     </section>
+
+    </details>
   </main>
 
   <footer class="footer">
