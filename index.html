@@ -627,6 +627,23 @@
       font-size: 13px;
     }
 
+    .auto-detect-note {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f4f7f1;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .auto-detect-note strong {
+      color: var(--green);
+    }
+
     textarea,
     select {
       width: 100%;
@@ -1329,6 +1346,9 @@
                   <label for="riskNarrative">위험상황</label>
                   <textarea id="riskNarrative">결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.</textarea>
                   <p class="help-text">자유문장과 아래 체크 항목을 함께 사용합니다.</p>
+                  <div class="auto-detect-note" id="autoDetectNote">
+                    <span>텍스트를 입력하면 기본 위험징후를 자동 제안합니다. 회계사 판단에 따라 체크를 추가하거나 해제할 수 있습니다.</span>
+                  </div>
                 </div>
 
                 <div class="field-group">
@@ -1370,6 +1390,7 @@
 
                 <div class="review-actions">
                   <button class="button primary" type="submit">커버리지 검토</button>
+                  <button class="button secondary" type="button" id="detectRisks">텍스트로 위험징후 체크</button>
                   <button class="button secondary" type="button" id="loadCutoffCase">기말 매출 예시</button>
                   <button class="button secondary" type="button" id="loadReceivableCase">채권 회수 예시</button>
                 </div>
@@ -1593,12 +1614,40 @@
       both: ["occurrence", "accuracy", "cutoff", "existence", "valuation"]
     };
 
+    const riskKeywordRules = {
+      year_end_concentration: [
+        "결산일", "기말", "월말", "연말", "직전", "마지막 영업일", "집중", "컷오프", "기간귀속"
+      ],
+      customer_acceptance_clause: [
+        "검수", "인수", "acceptance", "고객 승인", "완료 조건", "검수조건", "인수증"
+      ],
+      rapid_growth: [
+        "급증", "크게 증가", "대폭 증가", "전년 대비", "매출 증가", "성장", "목표달성"
+      ],
+      new_customer: [
+        "신규 거래처", "신규 고객", "새 거래처", "새로운 거래처", "첫 거래", "대규모 거래"
+      ],
+      post_period_return: [
+        "반품", "취소", "대변전표", "credit memo", "기말 후", "환불", "반품권", "취소권"
+      ],
+      manual_entry: [
+        "수기", "수동", "비경상", "분개", "전표", "manual", "조정분개", "승인 근거"
+      ],
+      overdue_receivable: [
+        "장기 미회수", "미회수", "회수 지연", "회수 부진", "채권", "매출채권", "연령", "aging", "재무상태 악화"
+      ],
+      related_party: [
+        "특수관계자", "관계회사", "임원", "계열사", "related party", "공시", "통상성"
+      ]
+    };
+
     const feedbackStorageKey = "revenueAuditMapperFeedback.v1";
     let currentReviewState = {
       risks: [],
       accountCycle: "revenue",
       suggestedProcedures: []
     };
+    let autoDetectTimer;
 
     function checkedValues(containerId) {
       return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map((input) => input.value);
@@ -1608,6 +1657,15 @@
       const wanted = new Set(values);
       document.querySelectorAll(`#${containerId} input`).forEach((input) => {
         input.checked = wanted.has(input.value);
+      });
+    }
+
+    function mergeChecked(containerId, values) {
+      const wanted = new Set(values);
+      document.querySelectorAll(`#${containerId} input`).forEach((input) => {
+        if (wanted.has(input.value)) {
+          input.checked = true;
+        }
       });
     }
 
@@ -1696,6 +1754,33 @@
           <div class="learning-stat"><strong>${counts.needs_more_information || 0}</strong><span>정보 필요</span></div>
         </div>
       `;
+    }
+
+    function detectRisksFromText(options = {}) {
+      const { overwrite = true, shouldReview = true } = options;
+      const narrative = document.getElementById("riskNarrative").value.toLowerCase();
+      const detected = Object.entries(riskKeywordRules)
+        .filter(([, keywords]) => keywords.some((keyword) => narrative.includes(keyword.toLowerCase())))
+        .map(([risk]) => risk);
+
+      if (overwrite) {
+        setChecked("riskInputs", detected);
+      } else {
+        mergeChecked("riskInputs", detected);
+      }
+
+      const note = document.getElementById("autoDetectNote");
+      if (detected.length) {
+        const detectedNames = detected.map((risk) => riskRules[risk].name).join(", ");
+        note.innerHTML = `<span><strong>자동 제안:</strong> ${detectedNames}</span>`;
+      } else {
+        note.innerHTML = "<span>텍스트에서 자동 제안할 위험징후를 찾지 못했습니다. 필요한 항목을 직접 체크해 주세요.</span>";
+      }
+
+      if (shouldReview) {
+        reviewCoverage();
+      }
+      return detected;
     }
 
     function renderCoverageRow(assertion, level, ratio) {
@@ -1883,21 +1968,28 @@
         reviewCoverage();
       }
     });
+    document.getElementById("riskNarrative").addEventListener("input", () => {
+      window.clearTimeout(autoDetectTimer);
+      autoDetectTimer = window.setTimeout(() => {
+        detectRisksFromText({ overwrite: true, shouldReview: true });
+      }, 500);
+    });
+    document.getElementById("detectRisks").addEventListener("click", () => {
+      detectRisksFromText({ overwrite: true, shouldReview: true });
+    });
     document.getElementById("loadCutoffCase").addEventListener("click", () => {
       document.getElementById("riskNarrative").value = "결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.";
       document.getElementById("accountCycle").value = "revenue";
-      setChecked("riskInputs", ["year_end_concentration", "customer_acceptance_clause", "post_period_return"]);
       setChecked("plannedInputs", ["cutoff_test"]);
-      reviewCoverage();
+      detectRisksFromText({ overwrite: true, shouldReview: true });
     });
     document.getElementById("loadReceivableCase").addEventListener("click", () => {
       document.getElementById("riskNarrative").value = "신규 거래처 매출채권의 후속 현금회수가 지연되고 장기 미회수 잔액이 증가했습니다.";
       document.getElementById("accountCycle").value = "accounts_receivable";
-      setChecked("riskInputs", ["new_customer", "overdue_receivable"]);
       setChecked("plannedInputs", ["ar_confirmation"]);
-      reviewCoverage();
+      detectRisksFromText({ overwrite: true, shouldReview: true });
     });
-    reviewCoverage();
+    detectRisksFromText({ overwrite: true, shouldReview: true });
   </script>
 </body>
 </html>
