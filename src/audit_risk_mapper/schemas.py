@@ -11,6 +11,10 @@ RISK_COLUMNS = [
     "source_level", "review_status",
 ]
 
+RISK_KEYWORD_COLUMNS = [
+    "risk_id", "keywords_ko", "source_level", "review_status",
+]
+
 PROCEDURE_COLUMNS = [
     "procedure_id", "procedure_name_ko", "audit_objective_ko",
     "procedure_description_ko", "related_accounts", "primary_assertions",

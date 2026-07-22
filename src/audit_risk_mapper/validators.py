@@ -11,6 +11,7 @@ from .schemas import (
     PAIR_COLUMNS,
     PROCEDURE_COLUMNS,
     RISK_COLUMNS,
+    RISK_KEYWORD_COLUMNS,
     SCENARIO_COLUMNS,
     TAG_COLUMNS,
     TEMPLATE_COLUMNS,
@@ -22,6 +23,7 @@ from .schemas import (
 REQUIRED = {
     "tag_dictionary.csv": TAG_COLUMNS,
     "risk_signal_library.csv": RISK_COLUMNS,
+    "risk_keyword_library.csv": RISK_KEYWORD_COLUMNS,
     "procedure_library.csv": PROCEDURE_COLUMNS,
     "risk_procedure_mapping.csv": MAPPING_COLUMNS,
     "scenario_templates.csv": TEMPLATE_COLUMNS,
@@ -53,6 +55,7 @@ def validate_dataset(root: Path, expected_scenarios: int | None = None, expected
 
     tags = read_csv(seed / "tag_dictionary.csv")
     risks = read_csv(seed / "risk_signal_library.csv")
+    risk_keywords = read_csv(seed / "risk_keyword_library.csv")
     procedures = read_csv(seed / "procedure_library.csv")
     mappings = read_csv(seed / "risk_procedure_mapping.csv")
     templates = read_csv(seed / "scenario_templates.csv")
@@ -62,6 +65,7 @@ def validate_dataset(root: Path, expected_scenarios: int | None = None, expected
     file_rows = {
         "tag_dictionary.csv": tags,
         "risk_signal_library.csv": risks,
+        "risk_keyword_library.csv": risk_keywords,
         "procedure_library.csv": procedures,
         "risk_procedure_mapping.csv": mappings,
         "scenario_templates.csv": templates,
@@ -78,7 +82,8 @@ def validate_dataset(root: Path, expected_scenarios: int | None = None, expected
             errors.append(f"{filename}: missing columns {missing}")
 
     for name, rows, key in [
-        ("tags", tags, "tag_id"), ("risks", risks, "risk_id"), ("procedures", procedures, "procedure_id"),
+        ("tags", tags, "tag_id"), ("risks", risks, "risk_id"),
+        ("risk keywords", risk_keywords, "risk_id"), ("procedures", procedures, "procedure_id"),
         ("mappings", mappings, "mapping_id"), ("templates", templates, "template_id"),
         ("scenarios", scenarios, "scenario_id"), ("pairs", pairs, "pair_id"),
     ]:
@@ -97,7 +102,7 @@ def validate_dataset(root: Path, expected_scenarios: int | None = None, expected
     errors.extend(_assertions(procedures, ["primary_assertions", "secondary_assertions"]))
     errors.extend(_assertions(scenarios, ["primary_assertions", "secondary_assertions"]))
 
-    for row in tags + risks + procedures + mappings + templates + scenarios + pairs:
+    for row in tags + risks + risk_keywords + procedures + mappings + templates + scenarios + pairs:
         status = row.get("review_status")
         if status and status not in VALID_REVIEW_STATUS:
             errors.append(f"invalid review_status {status}")
@@ -106,6 +111,11 @@ def validate_dataset(root: Path, expected_scenarios: int | None = None, expected
         invalid_tags = set(parse_multi(row.get("risk_tags"))) - tag_codes
         if invalid_tags:
             errors.append(f"{row['risk_id']}: unknown risk_tags {sorted(invalid_tags)}")
+    for row in risk_keywords:
+        if row["risk_id"] not in risk_ids:
+            errors.append(f"risk keywords: missing risk {row['risk_id']}")
+        if not parse_multi(row["keywords_ko"]):
+            errors.append(f"risk keywords: no keywords for {row['risk_id']}")
     for row in procedures:
         invalid_tags = set(parse_multi(row.get("applicable_risk_tags"))) - tag_codes
         if invalid_tags:
