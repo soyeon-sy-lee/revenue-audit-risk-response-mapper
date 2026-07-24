@@ -1,0 +1,11 @@
+risk_id,keywords_ko,source_level,review_status
+RISK001,결산일|기말 매출|월말 매출|연말 매출|컷오프|기간귀속,educational_inference,ai_generated_unreviewed
+RISK002,매출 급증|매출 증가|전년 대비|대폭 증가|목표달성,educational_inference,ai_generated_unreviewed
+RISK003,특정 거래처|거래처 집중|고객 집중|매출 비중,educational_inference,ai_generated_unreviewed
+RISK004,신규 거래처|신규 고객|새 거래처|첫 거래|대규모 거래,educational_inference,ai_generated_unreviewed
+RISK005,검수|고객 승인|고객 인수|인수증|완료 조건,educational_inference,ai_generated_unreviewed
+RISK006,반품|취소|대변전표|환불|반품권|취소권,educational_inference,ai_generated_unreviewed
+RISK007,수기|수동 전표|비경상 분개|조정분개|수기분개,educational_inference,ai_generated_unreviewed
+RISK008,장기 미회수|미회수|회수 지연|회수 부진|채권 연령|매출채권,educational_inference,ai_generated_unreviewed
+RISK009,특수관계자|관계회사|계열사|related party,educational_inference,ai_generated_unreviewed
+RISK010,매출총이익률|총이익률|마진 변동|비정상 마진,educational_inference,ai_generated_unreviewed

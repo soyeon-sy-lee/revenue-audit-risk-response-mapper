@@ -1,0 +1,2436 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revenue Audit Risk-Response Mapper</title>
+  <style>
+    :root {
+      --ink: #17211b;
+      --muted: #5f6d66;
+      --line: #d8e0da;
+      --paper: #f7f8f4;
+      --panel: #ffffff;
+      --green: #2e6f55;
+      --mint: #dceee5;
+      --blue: #305f86;
+      --sky: #dcebf3;
+      --gold: #a5682a;
+      --amber: #f3e5ca;
+      --red: #9c4a43;
+      --rose: #f2dfdd;
+      --slate: #40505c;
+      --shadow: 0 18px 40px rgba(24, 37, 30, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 64px;
+      padding: 12px clamp(18px, 4vw, 56px);
+      background: rgba(247, 248, 244, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 220px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      color: #fff;
+      background: var(--green);
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    nav a {
+      padding: 8px 10px;
+      border-radius: 7px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    nav a:hover {
+      color: var(--ink);
+      background: var(--mint);
+    }
+
+    main {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #coverage-tool {
+      order: 1;
+    }
+
+    .project-details {
+      order: 2;
+      border-bottom: 1px solid var(--line);
+      background: #eef2ed;
+    }
+
+    .project-details.secondary {
+      order: 3;
+    }
+
+    .project-details summary {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px clamp(18px, 5vw, 72px);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 900;
+      list-style-position: inside;
+    }
+
+    .project-details summary span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .project-details[open] summary {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: grid;
+      align-items: center;
+      padding: clamp(48px, 8vw, 96px) clamp(18px, 5vw, 72px) 40px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+      gap: clamp(28px, 5vw, 68px);
+      align-items: center;
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: var(--green);
+    }
+
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(44px, 7vw, 88px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2.1vw, 24px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 16px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 800;
+      box-shadow: 0 8px 20px rgba(23, 33, 27, 0.07);
+    }
+
+    .button.primary {
+      border-color: var(--green);
+      background: var(--green);
+      color: #fff;
+    }
+
+    .hero-proof {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .mock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      background: #edf3ee;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--slate);
+    }
+
+    .mock-body {
+      padding: 18px;
+    }
+
+    .case-text {
+      margin: 0 0 18px;
+      padding: 14px;
+      border-left: 4px solid var(--green);
+      background: #f4f7f1;
+      color: #32443b;
+      border-radius: 0 7px 7px 0;
+      font-size: 15px;
+    }
+
+    .recommendation {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr) 70px;
+      gap: 12px;
+      align-items: center;
+      min-height: 74px;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .rank {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 900;
+    }
+
+    .recommendation h3 {
+      margin: 0 0 3px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .recommendation p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .score {
+      justify-self: end;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .next-peek {
+      max-width: 1180px;
+      width: 100%;
+      margin: 28px auto 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    section {
+      padding: clamp(56px, 8vw, 92px) clamp(18px, 5vw, 72px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.75fr) minmax(280px, 0.55fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric {
+      min-height: 132px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 12px;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .pipe-step {
+      min-height: 148px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      position: relative;
+    }
+
+    .pipe-step::after {
+      content: "";
+      position: absolute;
+      top: 44px;
+      right: -12px;
+      width: 12px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .pipe-step:last-child::after {
+      display: none;
+    }
+
+    .step-no {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      background: var(--mint);
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .pipe-step h3 {
+      margin: 14px 0 6px;
+      font-size: 16px;
+    }
+
+    .pipe-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .chart-panel,
+    .flow-panel,
+    .table-panel,
+    .note-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 12px 30px rgba(23, 33, 27, 0.06);
+    }
+
+    .panel-pad {
+      padding: 20px;
+    }
+
+    .chart-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      font-weight: 900;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 122px minmax(0, 1fr) 48px;
+      gap: 12px;
+      align-items: center;
+      margin: 13px 0;
+      font-size: 14px;
+    }
+
+    .track {
+      height: 16px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #edf0ec;
+    }
+
+    .bar {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--green);
+    }
+
+    .bar.supporting {
+      background: var(--blue);
+    }
+
+    .bar.conditional {
+      background: var(--gold);
+    }
+
+    .bar.weak {
+      background: var(--slate);
+    }
+
+    .bar.na {
+      background: var(--red);
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr;
+      min-height: 64px;
+      margin-top: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .split-part {
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .train {
+      background: var(--green);
+    }
+
+    .validation {
+      background: var(--gold);
+    }
+
+    .test {
+      background: var(--blue);
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-item {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf9;
+    }
+
+    .flow-icon {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      background: var(--sky);
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .flow-item h3 {
+      margin: 0 0 2px;
+      font-size: 15px;
+    }
+
+    .flow-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      background: #f4f7f1;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 8px;
+      border-radius: 7px;
+      background: var(--amber);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status.ok {
+      background: var(--mint);
+      color: var(--green);
+    }
+
+    .status.warn {
+      background: var(--rose);
+      color: var(--red);
+    }
+
+    .limits {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .review-workbench {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .workbench-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 12px 30px rgba(23, 33, 27, 0.06);
+      overflow: hidden;
+    }
+
+    .workbench-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #f1f5ef;
+      border-bottom: 1px solid var(--line);
+      font-weight: 900;
+    }
+
+    .workbench-body {
+      padding: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field-group label,
+    .field-title {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .help-text {
+      margin: -4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .auto-detect-note {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f4f7f1;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .auto-detect-note strong {
+      color: var(--green);
+    }
+
+    .llm-settings {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .llm-settings summary {
+      padding: 10px 12px;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .llm-settings-body {
+      display: grid;
+      gap: 12px;
+      padding: 0 12px 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .llm-settings-body label {
+      display: grid;
+      gap: 6px;
+      padding-top: 10px;
+    }
+
+    .llm-settings input {
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .llm-error {
+      margin: 0;
+      padding: 10px 12px;
+      overflow-x: auto;
+      border: 1px solid #d8aaa6;
+      border-radius: 8px;
+      background: var(--rose);
+      color: var(--red);
+      font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 112px;
+      padding: 12px;
+      resize: vertical;
+    }
+
+    select {
+      min-height: 42px;
+      padding: 9px 10px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .check-card {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      min-height: 42px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf9;
+      color: #34443c;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .check-card input {
+      margin-top: 2px;
+      accent-color: var(--green);
+    }
+
+    .check-card:has(input:checked) {
+      border-color: #9bc3ad;
+      background: var(--mint);
+    }
+
+    .review-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .button.secondary {
+      box-shadow: none;
+      cursor: pointer;
+    }
+
+    button.button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .mode-toggle {
+      width: 100%;
+      min-height: 38px;
+      background: #fff;
+    }
+
+    .detection-control,
+    .llm-extraction {
+      display: grid;
+      gap: 10px;
+    }
+
+    .detection-heading {
+      margin: 2px 0 -2px;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .llm-extraction {
+      margin-top: 4px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .llm-extraction > .button {
+      justify-self: start;
+      box-shadow: none;
+    }
+
+    .llm-status {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .output-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .output-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcf9;
+      overflow: hidden;
+    }
+
+    .output-card h3 {
+      margin: 0;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f4f7f1;
+      font-size: 15px;
+    }
+
+    .output-card-content {
+      padding: 14px;
+    }
+
+    .coverage-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 86px;
+      gap: 10px;
+      align-items: center;
+      margin: 9px 0;
+      font-size: 13px;
+    }
+
+    .coverage-track {
+      height: 12px;
+      border-radius: 99px;
+      background: #e9eee9;
+      overflow: hidden;
+    }
+
+    .coverage-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--green);
+    }
+
+    .coverage-fill.partial {
+      background: var(--gold);
+    }
+
+    .coverage-fill.missing {
+      background: var(--red);
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 7px;
+      background: var(--mint);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .pill.warn {
+      background: var(--amber);
+      color: var(--gold);
+    }
+
+    .pill.danger {
+      background: var(--rose);
+      color: var(--red);
+    }
+
+    .indicator-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .indicator {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .indicator span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .indicator strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .indicator small {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .output-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #35443c;
+    }
+
+    .output-list li {
+      margin: 8px 0;
+    }
+
+    .procedure-item {
+      display: grid;
+      gap: 5px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .procedure-item:last-child {
+      border-bottom: 0;
+    }
+
+    .procedure-item strong {
+      font-size: 14px;
+    }
+
+    .procedure-item span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .procedure-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .learned-score {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .feedback-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 6px;
+    }
+
+    .feedback-button {
+      min-height: 30px;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--slate);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .feedback-button:hover {
+      border-color: #9bc3ad;
+      background: var(--mint);
+      color: var(--green);
+    }
+
+    .learning-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .learning-stat {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .learning-stat strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .learning-stat span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .limit {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .limit h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .limit p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer {
+      padding: 28px clamp(18px, 5vw, 72px);
+      color: var(--muted);
+      background: #eef2ed;
+      font-size: 14px;
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      .hero-inner,
+      .section-head,
+      .two-col,
+      .review-workbench {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-grid,
+      .pipeline,
+      .limits,
+      .checkbox-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pipe-step::after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      h1 {
+        font-size: 42px;
+      }
+
+      .metrics-grid,
+      .pipeline,
+      .limits,
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .recommendation {
+        grid-template-columns: 46px minmax(0, 1fr);
+      }
+
+      .score {
+        justify-self: start;
+        grid-column: 2;
+      }
+
+      .bar-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .split-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .coverage-row {
+        grid-template-columns: 1fr;
+      }
+
+      .learning-summary {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .indicator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Revenue Audit Risk-Response Mapper">
+      <span class="brand-mark">R</span>
+      <span>Risk-Response Mapper</span>
+    </a>
+    <nav aria-label="페이지 섹션">
+      <a href="#coverage-tool">커버리지 점검</a>
+      <a href="#project-details">프로젝트 설명</a>
+      <a href="#limits-details">한계</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <details class="project-details" id="project-details">
+      <summary>
+        프로젝트 설명 보기
+        <span>요약, 생성 구조, 검증 결과, 데모 흐름은 필요할 때 펼쳐서 확인합니다.</span>
+      </summary>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <p class="eyebrow">Educational audit analytics prototype</p>
+          <h1>Revenue Audit Risk-Response Mapper</h1>
+          <p class="subtitle">
+            매출·매출채권 위험징후를 가능한 왜곡 양상, 경영진 주장, 추가 확인 질문,
+            감사절차 후보와 연결하는 교육용 검토 도구입니다.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#summary">결과 보기</a>
+            <a class="button" href="#coverage-tool">커버리지 점검하기</a>
+          </div>
+        </div>
+
+        <aside class="hero-proof" aria-label="추천 결과 미리보기">
+          <div class="mock-header">
+            <span>SCN04200001</span>
+            <span>태그·규칙 기반 적합도 점수</span>
+          </div>
+          <div class="mock-body">
+            <p class="case-text">
+              결산일 직전 매출 집중과 고객 검수조건이 함께 나타난 사례에서
+              기간귀속, 발생사실, 정확성 주장을 중심으로 절차 후보를 점검합니다.
+            </p>
+            <div class="recommendation">
+              <span class="rank">1</span>
+              <div>
+                <h3>기말 전후 매출 컷오프 검사</h3>
+                <p>출고일, 인수일, 수익인식일 비교</p>
+              </div>
+              <strong class="score">core</strong>
+            </div>
+            <div class="recommendation">
+              <span class="rank">2</span>
+              <div>
+                <h3>계약서 주요 조건 검사</h3>
+                <p>검수조건과 비표준 조건 확인</p>
+              </div>
+              <strong class="score">support</strong>
+            </div>
+            <div class="recommendation">
+              <span class="rank">3</span>
+              <div>
+                <h3>기말 후 반품·대변전표 검사</h3>
+                <p>증거 이용 가능성에 따라 조건부 후보</p>
+              </div>
+              <strong class="score">cond.</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
+      <p class="next-peek">아래에서 실제 smoke 데이터 생성 수치와 검증 결과를 확인할 수 있습니다.</p>
+    </section>
+
+    <section id="summary">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>Phase 1 결과 요약</h2>
+          <p>
+            수작업으로 10,000개 행을 나열하지 않고, 검토 가능한 seed 지식베이스에서
+            재현 가능한 smoke 데이터셋을 생성했습니다.
+          </p>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric">
+            <span>합성 시나리오</span>
+            <strong>100</strong>
+            <small>seed 42, smoke mode</small>
+          </div>
+          <div class="metric">
+            <span>시나리오-절차 후보쌍</span>
+            <strong>500</strong>
+            <small>시나리오당 5개 후보</small>
+          </div>
+          <div class="metric">
+            <span>검증 스크립트</span>
+            <strong>통과</strong>
+            <small>필수 컬럼, FK, split 누수 등 점검</small>
+          </div>
+          <div class="metric">
+            <span>자동 테스트</span>
+            <strong>6/6</strong>
+            <small>pytest smoke tests passed</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>데이터 생성 구조</h2>
+          <p>
+            작은 지식베이스에서 템플릿을 만들고, 같은 seed에서 같은 산출물이 나오도록
+            생성기와 검증기를 먼저 구현했습니다.
+          </p>
+        </div>
+
+        <div class="pipeline" aria-label="데이터 생성 파이프라인">
+          <div class="pipe-step">
+            <span class="step-no">1</span>
+            <h3>Seed KB</h3>
+            <p>태그, 위험징후, 감사절차, 위험-절차 매핑을 분리 저장</p>
+          </div>
+          <div class="pipe-step">
+            <span class="step-no">2</span>
+            <h3>Templates</h3>
+            <p>위험 조합과 사실관계 slot을 가진 시나리오 템플릿</p>
+          </div>
+          <div class="pipe-step">
+            <span class="step-no">3</span>
+            <h3>Generator</h3>
+            <p>시나리오 100개와 후보쌍 500개를 재현 가능하게 생성</p>
+          </div>
+          <div class="pipe-step">
+            <span class="step-no">4</span>
+            <h3>Validator</h3>
+            <p>외래키, 중복, assertion, condition, split 누수 검사</p>
+          </div>
+          <div class="pipe-step">
+            <span class="step-no">5</span>
+            <h3>Review UI</h3>
+            <p>추천 근거, 추가 질문, 누락 주장 경고를 앱에서 확인</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidence">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>검증된 산출물</h2>
+          <p>
+            아래 수치는 실행된 smoke 데이터 기준입니다. 모델 성능 수치가 아니라
+            합성 규칙 기반 데이터셋의 내부 구성 요약입니다.
+          </p>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-panel panel-pad">
+            <div class="chart-title">
+              <span>후보쌍 클래스 분포</span>
+              <span>총 500</span>
+            </div>
+            <div class="bar-row">
+              <span>core</span>
+              <div class="track"><div class="bar" style="width: 50%"></div></div>
+              <strong>60</strong>
+            </div>
+            <div class="bar-row">
+              <span>supporting</span>
+              <div class="track"><div class="bar supporting" style="width: 83.3%"></div></div>
+              <strong>100</strong>
+            </div>
+            <div class="bar-row">
+              <span>conditional</span>
+              <div class="track"><div class="bar conditional" style="width: 100%"></div></div>
+              <strong>120</strong>
+            </div>
+            <div class="bar-row">
+              <span>weak_match</span>
+              <div class="track"><div class="bar weak" style="width: 100%"></div></div>
+              <strong>120</strong>
+            </div>
+            <div class="bar-row">
+              <span>not_applicable</span>
+              <div class="track"><div class="bar na" style="width: 83.3%"></div></div>
+              <strong>100</strong>
+            </div>
+
+            <div class="chart-title" style="margin-top: 28px;">
+              <span>템플릿 기반 split</span>
+              <span>100 scenarios</span>
+            </div>
+            <div class="split-grid" aria-label="train validation test split">
+              <div class="split-part train">train 60</div>
+              <div class="split-part validation">validation 20</div>
+              <div class="split-part test">test 20</div>
+            </div>
+          </div>
+
+          <div class="table-panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>검증 항목</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>필수 컬럼 및 ID 중복 검사</td>
+                  <td><span class="status ok">passed</span></td>
+                </tr>
+                <tr>
+                  <td>risk, procedure, scenario 외래키 무결성</td>
+                  <td><span class="status ok">passed</span></td>
+                </tr>
+                <tr>
+                  <td>core 후보의 계정·주장 불일치 방지</td>
+                  <td><span class="status ok">passed</span></td>
+                </tr>
+                <tr>
+                  <td>scenario_id와 procedure_id 후보쌍 중복 방지</td>
+                  <td><span class="status ok">passed</span></td>
+                </tr>
+                <tr>
+                  <td>template_id 기반 split 누수 검사</td>
+                  <td><span class="status ok">passed</span></td>
+                </tr>
+                <tr>
+                  <td>전문가 검토 상태</td>
+                  <td><span class="status">ai_generated_unreviewed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>추천 검토 흐름</h2>
+          <p>
+            단순히 “매출 급증이면 외부조회”로 바로 연결하지 않고,
+            위험징후에서 왜곡 가설과 경영진 주장을 거쳐 절차 후보로 이어집니다.
+          </p>
+        </div>
+
+        <div class="two-col">
+          <div class="flow-panel panel-pad">
+            <div class="flow-list">
+              <div class="flow-item">
+                <span class="flow-icon">1</span>
+                <div>
+                  <h3>위험징후 입력</h3>
+                  <p>결산일 직전 매출 집중, 고객 검수조건, 증빙 가용성 등을 구조화합니다.</p>
+                </div>
+              </div>
+              <div class="flow-item">
+                <span class="flow-icon">2</span>
+                <div>
+                  <h3>가능한 왜곡 양상</h3>
+                  <p>차기 매출 조기 인식, 조건 미충족 매출 인식 가능성을 교육용 가설로 표시합니다.</p>
+                </div>
+              </div>
+              <div class="flow-item">
+                <span class="flow-icon">3</span>
+                <div>
+                  <h3>관련 주장</h3>
+                  <p>기간귀속, 발생사실, 정확성 등 거래와 잔액의 주장을 구분합니다.</p>
+                </div>
+              </div>
+              <div class="flow-item">
+                <span class="flow-icon">4</span>
+                <div>
+                  <h3>추가 질문</h3>
+                  <p>출고일, 검수 완료일, 후속 반품, 현금회수 등 부족한 정보를 먼저 묻습니다.</p>
+                </div>
+              </div>
+              <div class="flow-item">
+                <span class="flow-icon">5</span>
+                <div>
+                  <h3>절차 후보와 누락 점검</h3>
+                  <p>조건부 절차, 약한 대응, 부적절 후보를 구분하고 계획 절차의 주장 커버리지를 확인합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="note-panel panel-pad">
+            <h3 style="margin-top: 0;">대표 사례</h3>
+            <p>
+              “결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다.”
+            </p>
+            <table>
+              <tbody>
+                <tr>
+                  <th>위험</th>
+                  <td>기말 매출 집중, 고객 검수조건</td>
+                </tr>
+                <tr>
+                  <th>주장</th>
+                  <td>cutoff, occurrence, accuracy</td>
+                </tr>
+                <tr>
+                  <th>핵심 후보</th>
+                  <td>기말 전후 매출 컷오프 검사</td>
+                </tr>
+                <tr>
+                  <th>조건부 후보</th>
+                  <td>기말 후 반품·대변전표 검사</td>
+                </tr>
+                <tr>
+                  <th>추가 질문</th>
+                  <td>검수 완료일과 수익인식일을 비교할 자료가 있는지 확인</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    </details>
+
+    <section id="coverage-tool">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>커버리지 점검 도구</h2>
+          <p>
+            위험상황, 검증대상, 수행하려는 절차를 입력하면 주장별 대응 여부와
+            누락 가능성이 있는 절차를 규칙 기반으로 검토합니다.
+          </p>
+        </div>
+
+        <div class="review-workbench">
+          <form class="workbench-panel" id="coverageForm">
+            <div class="workbench-header">
+              <span>입력창</span>
+              <span class="status">education only</span>
+            </div>
+            <div class="workbench-body">
+              <div class="form-grid">
+                <div class="field-group">
+                  <label for="riskNarrative">위험상황</label>
+                  <textarea id="riskNarrative">결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.</textarea>
+                  <p class="help-text">자유문장과 아래 체크 항목을 함께 사용합니다.</p>
+                  <div class="detection-control">
+                    <label class="check-card mode-toggle">
+                      <input type="checkbox" id="autoDetectEnabled" checked>
+                      기본 위험징후 자동 체크 사용
+                    </label>
+                    <p class="detection-heading">기본 위험징후 자동 체크 결과</p>
+                    <div class="auto-detect-note" id="autoDetectNote">
+                      <span>텍스트를 입력하면 기본 위험징후를 자동 제안합니다. 회계사 판단에 따라 체크를 추가하거나 해제할 수 있습니다.</span>
+                    </div>
+                  </div>
+                  <div class="llm-extraction">
+                    <button class="button secondary" type="button" id="extractRisksWithLlm">LLM으로 추출</button>
+                    <details class="llm-settings" id="llmSettings">
+                      <summary>Gemini LLM 설정</summary>
+                      <div class="llm-settings-body">
+                        <label for="geminiApiKey">
+                          Gemini API key
+                          <input id="geminiApiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Google AI Studio API key">
+                        </label>
+                        <label for="geminiModel">
+                          모델
+                          <select id="geminiModel">
+                            <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite · 저비용 권장</option>
+                            <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite · 최신</option>
+                          </select>
+                        </label>
+                        <p class="help-text">API key는 현재 페이지의 입력란에만 보관되며 저장하지 않습니다. 브라우저에서 Gemini API를 직접 호출합니다.</p>
+                      </div>
+                    </details>
+                    <p class="detection-heading">LLM 추출 결과</p>
+                    <div class="auto-detect-note" id="llmResult" aria-live="polite">
+                      <span>아직 LLM 추출을 실행하지 않았습니다.</span>
+                    </div>
+                    <p class="llm-status" id="llmStatus" aria-live="polite" hidden></p>
+                    <pre class="llm-error" id="llmError" aria-live="assertive" hidden></pre>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <span class="field-title">검증대상</span>
+                  <select id="accountCycle">
+                    <option value="revenue">매출 거래</option>
+                    <option value="accounts_receivable">매출채권 잔액</option>
+                    <option value="both">매출 및 매출채권</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <span class="field-title">위험징후</span>
+                  <div class="checkbox-grid" id="riskInputs">
+                    <label class="check-card"><input type="checkbox" value="year_end_concentration" checked>기말 매출 집중</label>
+                    <label class="check-card"><input type="checkbox" value="customer_acceptance_clause" checked>고객 검수조건</label>
+                    <label class="check-card"><input type="checkbox" value="rapid_growth">매출 급증</label>
+                    <label class="check-card"><input type="checkbox" value="new_customer">신규 거래처</label>
+                    <label class="check-card"><input type="checkbox" value="post_period_return" checked>기말 후 반품 증가</label>
+                    <label class="check-card"><input type="checkbox" value="manual_entry">수기 매출전표</label>
+                    <label class="check-card"><input type="checkbox" value="overdue_receivable">장기 미회수 채권</label>
+                    <label class="check-card"><input type="checkbox" value="related_party">특수관계자 거래</label>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <span class="field-title">수행하려는 절차</span>
+                  <div class="checkbox-grid" id="plannedInputs">
+                    <label class="check-card"><input type="checkbox" value="cutoff_test" checked>기말 전후 매출 컷오프 검사</label>
+                    <label class="check-card"><input type="checkbox" value="contract_review">계약서 주요 조건 검사</label>
+                    <label class="check-card"><input type="checkbox" value="subsequent_cash">후속 현금회수 대조</label>
+                    <label class="check-card"><input type="checkbox" value="ar_confirmation">매출채권 외부조회</label>
+                    <label class="check-card"><input type="checkbox" value="returns_credit_memo">기말 후 반품·대변전표 검사</label>
+                    <label class="check-card"><input type="checkbox" value="manual_journal_test">수기분개 상세 테스트</label>
+                    <label class="check-card"><input type="checkbox" value="customer_concentration_analysis">거래처별 매출 집중 분석</label>
+                    <label class="check-card"><input type="checkbox" value="aging_analysis">미회수 채권 연령 분석</label>
+                  </div>
+                </div>
+
+                <div class="review-actions">
+                  <button class="button primary" type="submit">커버리지 검토</button>
+                  <button class="button secondary" type="button" id="detectRisks">텍스트로 위험징후 체크</button>
+                  <button class="button secondary" type="button" id="loadCutoffCase">기말 매출 예시</button>
+                  <button class="button secondary" type="button" id="loadReceivableCase">채권 회수 예시</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="workbench-panel" aria-live="polite">
+            <div class="workbench-header">
+              <span>출력창</span>
+              <span class="status ok" id="overallStatus">ready</span>
+            </div>
+            <div class="workbench-body">
+              <div class="output-grid" id="coverageOutput">
+                <div class="output-card">
+                  <h3>검토 결과</h3>
+                  <div class="output-card-content">
+                    <p class="help-text">왼쪽 입력값을 조정한 뒤 `커버리지 검토`를 누르면 결과가 표시됩니다.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <details class="project-details secondary" id="limits-details">
+      <summary>
+        한계와 다음 단계 보기
+        <span>전문적 판단 대체 금지, 합성 데이터 한계, 확장 계획을 확인합니다.</span>
+      </summary>
+
+    <section id="limits">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>명시적 한계와 다음 단계</h2>
+          <p>
+            이 결과물은 Phase 1 출발점입니다. 성과를 과장하지 않고,
+            확장 전 검증해야 할 지점을 분리했습니다.
+          </p>
+        </div>
+
+        <div class="limits">
+          <div class="limit">
+            <h3>전문적 판단 대체 아님</h3>
+            <p>감사의견, 중요성, 표본크기, 감사시간, 충분한 감사증거 확보 결론을 산출하지 않습니다.</p>
+          </div>
+          <div class="limit">
+            <h3>합성 교육 데이터</h3>
+            <p>현재 생성 행은 실무자 검토 전이며 기본 상태는 `ai_generated_unreviewed`입니다.</p>
+          </div>
+          <div class="limit">
+            <h3>다음 단계</h3>
+            <p>태그 40~55개, 위험 60개, 절차 45개, 템플릿 150개로 확장하기 전 seed 논리를 검토합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    </details>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Revenue Audit Risk-Response Mapper</span>
+      <span>Smoke dataset: 100 scenarios, 500 pairs, seed 42</span>
+    </div>
+  </footer>
+  <script src="./risk_extraction_prompt_static.js"></script>
+  <script>
+    const assertionLabels = {
+      cutoff: "기간귀속",
+      occurrence: "발생사실",
+      accuracy: "정확성",
+      existence: "실재성",
+      valuation: "평가",
+      presentation: "표시",
+      classification: "분류",
+      rights_and_obligations: "권리와 의무"
+    };
+
+    const riskRules = {
+      year_end_concentration: {
+        name: "기말 매출 집중",
+        assertions: ["cutoff", "occurrence", "accuracy"],
+        questions: [
+          "증가는 특정 월 또는 결산일 직전에 집중됐습니까?",
+          "출고일, 고객 인수일, 검수일, 수익인식일을 비교할 자료가 있습니까?",
+          "기말 후 반품 또는 대변전표가 증가했습니까?"
+        ],
+        requiredProcedures: ["cutoff_test"],
+        suggestedProcedures: ["contract_review", "returns_credit_memo"],
+        warning: "기말 매출 집중 위험이 있으므로 기말 전후 거래의 기간귀속을 직접 검토하는 절차가 선택되었는지 확인이 필요합니다."
+      },
+      customer_acceptance_clause: {
+        name: "고객 검수조건",
+        assertions: ["cutoff", "occurrence", "accuracy"],
+        questions: [
+          "계약상 고객 검수 완료가 수익인식 조건입니까?",
+          "검수 완료일과 수익인식일을 대조할 수 있습니까?"
+        ],
+        requiredProcedures: ["contract_review", "cutoff_test"],
+        suggestedProcedures: ["returns_credit_memo"],
+        warning: "고객 검수조건이 있으므로 계약 조건과 검수 완료일을 수익인식일과 비교하는 절차를 검토해야 합니다."
+      },
+      rapid_growth: {
+        name: "매출 급증",
+        assertions: ["occurrence", "accuracy", "cutoff"],
+        questions: [
+          "수량 증가와 단가 상승 중 어느 요인이 큽니까?",
+          "신규 거래처 또는 특정 거래처에서 증가가 집중됐습니까?",
+          "매출채권과 영업현금흐름도 함께 증가했습니까?"
+        ],
+        requiredProcedures: ["customer_concentration_analysis"],
+        suggestedProcedures: ["contract_review", "subsequent_cash"],
+        warning: "매출 급증은 원인 분석만으로 충분하지 않으므로 주요 거래의 발생사실과 정확성을 뒷받침하는 절차가 필요할 수 있습니다."
+      },
+      new_customer: {
+        name: "신규 거래처",
+        assertions: ["occurrence", "cutoff", "accuracy"],
+        questions: [
+          "신규 거래처의 신용상태와 거래 조건을 확인했습니까?",
+          "후속 현금회수 또는 외부 증거를 확보할 수 있습니까?"
+        ],
+        requiredProcedures: ["contract_review"],
+        suggestedProcedures: ["subsequent_cash", "ar_confirmation"],
+        warning: "신규 거래처 대규모 매출은 거래 실재성과 조건 충족 여부를 함께 검토할 필요가 있습니다."
+      },
+      post_period_return: {
+        name: "기말 후 반품 증가",
+        assertions: ["accuracy", "cutoff", "valuation"],
+        questions: [
+          "기말 후 반품, 취소 또는 대변전표가 원거래와 연결됩니까?",
+          "반품권 또는 취소권이 계약 조건에 포함되어 있습니까?"
+        ],
+        requiredProcedures: ["returns_credit_memo"],
+        suggestedProcedures: ["contract_review"],
+        warning: "기말 후 반품 증가가 있으면 기말 매출의 정확성, 기간귀속, 평가 관련 검토가 필요할 수 있습니다."
+      },
+      manual_entry: {
+        name: "수기 매출전표",
+        assertions: ["occurrence", "accuracy", "classification"],
+        questions: [
+          "수기전표의 승인자, 입력 사유, 근거 문서를 확인했습니까?",
+          "비경상 분개가 목표달성 직전 기간에 집중됐습니까?"
+        ],
+        requiredProcedures: ["manual_journal_test"],
+        suggestedProcedures: ["contract_review"],
+        warning: "수기 매출전표가 포함되어 있으면 승인과 근거 문서에 대한 상세 검토가 누락되지 않았는지 확인이 필요합니다."
+      },
+      overdue_receivable: {
+        name: "장기 미회수 채권",
+        assertions: ["valuation", "existence"],
+        questions: [
+          "기말 후 현금회수 내역이 있습니까?",
+          "거래처 분쟁, 재무상태 악화, 지급 지연 사유가 확인됐습니까?"
+        ],
+        requiredProcedures: ["aging_analysis"],
+        suggestedProcedures: ["subsequent_cash", "ar_confirmation"],
+        warning: "장기 미회수 채권은 실재성뿐 아니라 평가충당금 관련 검토가 필요할 수 있습니다."
+      },
+      related_party: {
+        name: "특수관계자 거래",
+        assertions: ["presentation", "occurrence", "rights_and_obligations"],
+        questions: [
+          "특수관계자 식별과 승인 절차를 확인했습니까?",
+          "거래 조건의 통상성과 표시 필요성을 검토했습니까?"
+        ],
+        requiredProcedures: ["contract_review"],
+        suggestedProcedures: ["ar_confirmation"],
+        warning: "특수관계자 거래는 발생사실뿐 아니라 표시와 거래조건 검토가 필요합니다."
+      }
+    };
+
+    const procedureRules = {
+      cutoff_test: {
+        name: "기말 전후 매출 컷오프 검사",
+        assertions: ["cutoff", "occurrence", "accuracy"],
+        directRisks: ["year_end_concentration", "customer_acceptance_clause"],
+        note: "출고일, 고객 인수일, 검수일, 수익인식일을 비교합니다."
+      },
+      contract_review: {
+        name: "계약서 주요 조건 검사",
+        assertions: ["occurrence", "accuracy", "cutoff", "presentation"],
+        directRisks: ["customer_acceptance_clause", "new_customer", "related_party"],
+        note: "검수조건, 반품권, 취소권, 비표준 조건을 확인합니다."
+      },
+      subsequent_cash: {
+        name: "후속 현금회수 대조",
+        assertions: ["existence", "valuation", "occurrence"],
+        directRisks: ["overdue_receivable", "new_customer"],
+        note: "후속 현금회수를 매출채권 및 주요 거래와 대조합니다."
+      },
+      ar_confirmation: {
+        name: "매출채권 외부조회",
+        assertions: ["existence", "rights_and_obligations"],
+        directRisks: ["overdue_receivable", "new_customer"],
+        note: "매출채권 실재성 관련 외부 증거를 확보합니다."
+      },
+      returns_credit_memo: {
+        name: "기말 후 반품·대변전표 검사",
+        assertions: ["accuracy", "cutoff", "valuation"],
+        directRisks: ["post_period_return", "year_end_concentration"],
+        note: "기말 후 반품, 취소, 대변전표를 원거래와 대조합니다."
+      },
+      manual_journal_test: {
+        name: "수기분개 상세 테스트",
+        assertions: ["occurrence", "accuracy", "classification"],
+        directRisks: ["manual_entry"],
+        note: "수기 매출전표의 승인, 근거, 계정분류를 확인합니다."
+      },
+      customer_concentration_analysis: {
+        name: "거래처별 매출 집중 분석",
+        assertions: ["accuracy", "presentation"],
+        directRisks: ["rapid_growth", "new_customer"],
+        note: "거래처별 비중과 전년 대비 변동을 분석합니다."
+      },
+      aging_analysis: {
+        name: "미회수 채권 연령 분석",
+        assertions: ["valuation", "existence"],
+        directRisks: ["overdue_receivable"],
+        note: "채권 연령과 후속 회수, 분쟁 여부를 분석합니다."
+      }
+    };
+
+    const accountAssertionDefaults = {
+      revenue: ["occurrence", "accuracy", "cutoff"],
+      accounts_receivable: ["existence", "valuation", "rights_and_obligations"],
+      both: ["occurrence", "accuracy", "cutoff", "existence", "valuation"]
+    };
+
+    const riskKeywordRules = {
+      year_end_concentration: [
+        "결산일", "기말", "월말", "연말", "직전", "마지막 영업일", "집중", "컷오프", "기간귀속"
+      ],
+      customer_acceptance_clause: [
+        "검수", "인수", "acceptance", "고객 승인", "완료 조건", "검수조건", "인수증"
+      ],
+      rapid_growth: [
+        "급증", "크게 증가", "대폭 증가", "전년 대비", "매출 증가", "성장", "목표달성"
+      ],
+      new_customer: [
+        "신규 거래처", "신규 고객", "새 거래처", "새로운 거래처", "첫 거래", "대규모 거래"
+      ],
+      post_period_return: [
+        "반품", "취소", "대변전표", "credit memo", "기말 후", "환불", "반품권", "취소권"
+      ],
+      manual_entry: [
+        "수기", "수동", "비경상", "분개", "전표", "manual", "조정분개", "승인 근거"
+      ],
+      overdue_receivable: [
+        "장기 미회수", "미회수", "회수 지연", "회수 부진", "채권", "매출채권", "연령", "aging", "재무상태 악화"
+      ],
+      related_party: [
+        "특수관계자", "관계회사", "임원", "계열사", "related party", "공시", "통상성"
+      ]
+    };
+
+    const feedbackStorageKey = "revenueAuditMapperFeedback.v1";
+    const geminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models";
+    let currentReviewState = {
+      risks: [],
+      accountCycle: "revenue",
+      suggestedProcedures: []
+    };
+    let autoDetectTimer;
+
+    function checkedValues(containerId) {
+      return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map((input) => input.value);
+    }
+
+    function isAutoDetectEnabled() {
+      return document.getElementById("autoDetectEnabled").checked;
+    }
+
+    function setChecked(containerId, values) {
+      const wanted = new Set(values);
+      document.querySelectorAll(`#${containerId} input`).forEach((input) => {
+        input.checked = wanted.has(input.value);
+      });
+    }
+
+    function mergeChecked(containerId, values) {
+      const wanted = new Set(values);
+      document.querySelectorAll(`#${containerId} input`).forEach((input) => {
+        if (wanted.has(input.value)) {
+          input.checked = true;
+        }
+      });
+    }
+
+    function unique(items) {
+      return Array.from(new Set(items.filter(Boolean)));
+    }
+
+    function labelAssertion(assertion) {
+      return assertionLabels[assertion] || assertion;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function loadFeedback() {
+      try {
+        return JSON.parse(localStorage.getItem(feedbackStorageKey)) || [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveFeedbackItem(item) {
+      const feedback = loadFeedback();
+      feedback.push({
+        ...item,
+        createdAt: new Date().toISOString(),
+        source: "local_browser_feedback"
+      });
+      localStorage.setItem(feedbackStorageKey, JSON.stringify(feedback.slice(-200)));
+    }
+
+    function feedbackCounts() {
+      return loadFeedback().reduce((acc, item) => {
+        acc[item.feedbackType] = (acc[item.feedbackType] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function feedbackAdjustment(procedure, risks, accountCycle) {
+      const relevantFeedback = loadFeedback().filter((item) => {
+        const sameProcedure = item.procedure === procedure;
+        const sameAccount = item.accountCycle === accountCycle;
+        const riskOverlap = item.risks.some((risk) => risks.includes(risk));
+        return sameProcedure && sameAccount && riskOverlap;
+      });
+      const rawScore = relevantFeedback.reduce((score, item) => {
+        if (item.feedbackType === "helpful") return score + 0.12;
+        if (item.feedbackType === "relevant_but_lower_priority") return score - 0.04;
+        if (item.feedbackType === "not_applicable_to_case") return score - 0.12;
+        if (item.feedbackType === "needs_more_information") return score - 0.02;
+        return score;
+      }, 0);
+      return Math.max(-0.25, Math.min(0.25, rawScore));
+    }
+
+    function baseProcedureScore(procedure, risks) {
+      const rule = procedureRules[procedure];
+      const directMatches = rule.directRisks.filter((risk) => risks.includes(risk)).length;
+      const requiredMatches = risks.filter((risk) => riskRules[risk].requiredProcedures.includes(procedure)).length;
+      return requiredMatches * 2 + directMatches;
+    }
+
+    function feedbackLabel(type) {
+      return {
+        helpful: "도움됨",
+        relevant_but_lower_priority: "관련 있지만 낮은 우선순위",
+        not_applicable_to_case: "이 사례에는 부적합",
+        needs_more_information: "정보 더 필요"
+      }[type] || type;
+    }
+
+    function renderLearningSummary() {
+      const counts = feedbackCounts();
+      return `
+        <div class="learning-summary">
+          <div class="learning-stat"><strong>${counts.helpful || 0}</strong><span>도움됨</span></div>
+          <div class="learning-stat"><strong>${counts.relevant_but_lower_priority || 0}</strong><span>낮은 우선순위</span></div>
+          <div class="learning-stat"><strong>${counts.not_applicable_to_case || 0}</strong><span>부적합</span></div>
+          <div class="learning-stat"><strong>${counts.needs_more_information || 0}</strong><span>정보 필요</span></div>
+        </div>
+      `;
+    }
+
+    function updateAutoDetectControls() {
+      const enabled = isAutoDetectEnabled();
+      const note = document.getElementById("autoDetectNote");
+      const detectButton = document.getElementById("detectRisks");
+      detectButton.disabled = !enabled;
+      if (!enabled) {
+        note.innerHTML = "<span><strong>수동 모드:</strong> 위험징후 체크는 자동 변경되지 않습니다. 회계사 판단으로 직접 체크해 주세요.</span>";
+      }
+    }
+
+    function detectRisksFromText(options = {}) {
+      const { overwrite = true, shouldReview = true } = options;
+      if (!isAutoDetectEnabled()) {
+        updateAutoDetectControls();
+        if (shouldReview) {
+          reviewCoverage();
+        }
+        return checkedValues("riskInputs");
+      }
+
+      const narrative = document.getElementById("riskNarrative").value.toLowerCase();
+      const detected = Object.entries(riskKeywordRules)
+        .filter(([, keywords]) => keywords.some((keyword) => narrative.includes(keyword.toLowerCase())))
+        .map(([risk]) => risk);
+
+      if (overwrite) {
+        setChecked("riskInputs", detected);
+      } else {
+        mergeChecked("riskInputs", detected);
+      }
+
+      const note = document.getElementById("autoDetectNote");
+      if (detected.length) {
+        const detectedNames = detected.map((risk) => riskRules[risk].name).join(", ");
+        note.innerHTML = `<span><strong>자동 제안:</strong> ${detectedNames}</span>`;
+      } else {
+        note.innerHTML = "<span>텍스트에서 자동 제안할 위험징후를 찾지 못했습니다. 필요한 항목을 직접 체크해 주세요.</span>";
+      }
+
+      if (shouldReview) {
+        reviewCoverage();
+      }
+      updateAutoDetectControls();
+      return detected;
+    }
+
+    function buildLlmPrompt(narrative) {
+      if (!window.RISK_EXTRACTION_PROMPT) {
+        throw new Error("분리된 프롬프트 파일(prompts/risk_extraction_prompt_static.js)을 불러오지 못했습니다.");
+      }
+      const catalog = Object.entries(riskRules).map(([riskId, rule]) => {
+        const keywords = riskKeywordRules[riskId] || [];
+        return `- ${riskId} | ${rule.name} | 키워드: ${keywords.join(", ")}`;
+      }).join("\n");
+      return window.RISK_EXTRACTION_PROMPT
+        .replace("{{RISK_CATALOG}}", catalog)
+        .replace("{{NARRATIVE}}", narrative);
+    }
+
+    function showLlmStatus(message) {
+      const status = document.getElementById("llmStatus");
+      status.textContent = message;
+      status.hidden = !message;
+    }
+
+    function showLlmError(error) {
+      const output = document.getElementById("llmError");
+      output.textContent = error instanceof Error && error.stack ? error.stack : String(error);
+      output.hidden = false;
+    }
+
+    function buildGeminiGenerationConfig(validRiskIds, model) {
+      const schema = {
+        type: "object",
+        properties: {
+          risk_ids: {
+            type: "array",
+            items: { type: "string", enum: validRiskIds }
+          }
+        },
+        required: ["risk_ids"]
+      };
+      const config = {
+        maxOutputTokens: 256,
+        thinkingConfig: { thinkingLevel: "minimal" }
+      };
+      if (model === "gemini-3.5-flash-lite") {
+        config.responseFormat = {
+          text: { mimeType: "application/json", schema }
+        };
+      } else {
+        config.responseMimeType = "application/json";
+        config.responseSchema = schema;
+      }
+      return config;
+    }
+
+    async function extractRisksWithLlm() {
+      const settings = document.getElementById("llmSettings");
+      const apiKeyInput = document.getElementById("geminiApiKey");
+      const button = document.getElementById("extractRisksWithLlm");
+      const errorOutput = document.getElementById("llmError");
+      const resultOutput = document.getElementById("llmResult");
+
+      const narrative = document.getElementById("riskNarrative").value.trim();
+      const apiKey = apiKeyInput.value.trim();
+      const model = document.getElementById("geminiModel").value;
+      errorOutput.hidden = true;
+      errorOutput.textContent = "";
+
+      if (!apiKey) {
+        settings.open = true;
+        apiKeyInput.focus();
+        showLlmError(new Error("Gemini API key를 입력해주세요."));
+        return;
+      }
+      if (!narrative) {
+        showLlmError(new Error("추출할 위험상황을 입력해주세요."));
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "LLM 추출 중...";
+      showLlmStatus(`${model} 호출 중...`);
+      resultOutput.innerHTML = "<span>LLM이 위험징후를 추출하고 있습니다.</span>";
+
+      try {
+        const validRiskIds = Object.keys(riskRules);
+        const response = await fetch(`${geminiEndpoint}/${encodeURIComponent(model)}:generateContent`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey
+          },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: buildLlmPrompt(narrative) }] }],
+            generationConfig: buildGeminiGenerationConfig(validRiskIds, model)
+          })
+        });
+        const rawResponse = await response.text();
+        if (!response.ok) {
+          throw new Error(`Gemini API error\nHTTP ${response.status} ${response.statusText}\n${rawResponse}`);
+        }
+
+        let apiResponse;
+        try {
+          apiResponse = JSON.parse(rawResponse);
+        } catch (error) {
+          throw new Error(`Gemini API 응답을 JSON으로 해석할 수 없습니다.\n${rawResponse}`, { cause: error });
+        }
+        const responseText = apiResponse.candidates?.[0]?.content?.parts
+          ?.map((part) => part.text || "").join("").trim();
+        if (!responseText) {
+          throw new Error(`Gemini 응답에 텍스트 candidate가 없습니다.\n${rawResponse}`);
+        }
+
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (error) {
+          throw new Error(`Gemini의 추출 결과를 JSON으로 해석할 수 없습니다.\n${responseText}\n\n전체 API 응답:\n${rawResponse}`, { cause: error });
+        }
+        if (!Array.isArray(result.risk_ids)) {
+          throw new Error(`risk_ids가 배열이 아닙니다.\n${responseText}`);
+        }
+        const unknownRiskIds = result.risk_ids.filter((riskId) => !validRiskIds.includes(riskId));
+        if (unknownRiskIds.length) {
+          throw new Error(`등록되지 않은 위험 ID가 반환됐습니다: ${unknownRiskIds.join(", ")}\n${responseText}`);
+        }
+
+        const detected = unique(result.risk_ids);
+        setChecked("riskInputs", detected);
+        const detectedNames = detected.map((riskId) => riskRules[riskId].name).join(", ");
+        resultOutput.innerHTML = detected.length
+          ? `<span><strong>추출된 위험징후:</strong> ${escapeHtml(detectedNames)}</span>`
+          : "<span>추출된 위험징후가 없습니다.</span>";
+        showLlmStatus(`LLM 추출 완료 · ${detected.length}개 위험징후`);
+        reviewCoverage();
+      } catch (error) {
+        resultOutput.innerHTML = "<span>추출에 실패했습니다. 아래 오류 메시지를 확인해주세요.</span>";
+        showLlmStatus("LLM 추출 실패");
+        showLlmError(error);
+      } finally {
+        button.disabled = false;
+        button.textContent = "LLM으로 추출";
+      }
+    }
+
+    function renderCoverageRow(assertion, level, ratio) {
+      const fillClass = level === "직접 대응" ? "" : level === "일부 대응" ? "partial" : "missing";
+      return `
+        <div class="coverage-row">
+          <strong>${labelAssertion(assertion)}</strong>
+          <div class="coverage-track"><div class="coverage-fill ${fillClass}" style="width: ${ratio}%"></div></div>
+          <span>${level}</span>
+        </div>
+      `;
+    }
+
+    function renderList(items, emptyText) {
+      if (!items.length) {
+        return `<p class="help-text">${emptyText}</p>`;
+      }
+      return `<ul class="output-list">${items.map((item) => `<li>${item}</li>`).join("")}</ul>`;
+    }
+
+    function reviewCoverage(event) {
+      if (event) {
+        event.preventDefault();
+      }
+
+      const accountCycle = document.getElementById("accountCycle").value;
+      const risks = checkedValues("riskInputs");
+      const planned = checkedValues("plannedInputs");
+      const narrative = document.getElementById("riskNarrative").value.trim();
+
+      const targetAssertions = unique([
+        ...accountAssertionDefaults[accountCycle],
+        ...risks.flatMap((risk) => riskRules[risk].assertions)
+      ]);
+      const plannedAssertions = unique(planned.flatMap((procedure) => procedureRules[procedure].assertions));
+      const coveredRisks = new Set(planned.flatMap((procedure) => procedureRules[procedure].directRisks));
+      const missingAssertions = targetAssertions.filter((assertion) => !plannedAssertions.includes(assertion));
+      const partiallyCovered = targetAssertions.filter((assertion) => plannedAssertions.includes(assertion));
+      const missingCoreProcedures = unique(risks.flatMap((risk) => {
+        return riskRules[risk].requiredProcedures.filter((procedure) => !planned.includes(procedure));
+      }));
+      const suggestedProcedures = unique([
+        ...missingCoreProcedures,
+        ...risks.flatMap((risk) => riskRules[risk].suggestedProcedures)
+      ])
+        .filter((procedure) => !planned.includes(procedure))
+        .map((procedure) => ({
+          procedure,
+          baseScore: baseProcedureScore(procedure, risks),
+          adjustment: feedbackAdjustment(procedure, risks, accountCycle)
+        }))
+        .sort((left, right) => {
+          return (right.baseScore + right.adjustment) - (left.baseScore + left.adjustment);
+        });
+      const questions = unique(risks.flatMap((risk) => riskRules[risk].questions));
+      const riskResponseWarnings = unique([
+        ...risks
+          .filter((risk) => !riskRules[risk].requiredProcedures.every((procedure) => planned.includes(procedure)))
+          .map((risk) => riskRules[risk].warning)
+      ]);
+      const assertionWarnings = missingAssertions.map((assertion) => `${labelAssertion(assertion)} 주장에 직접 대응하는 절차가 선택되지 않았는지 검토가 필요합니다.`);
+      const weaklyRelatedPlanned = planned.filter((procedure) => {
+        const directRisks = procedureRules[procedure].directRisks;
+        return risks.length > 0 && !directRisks.some((risk) => risks.includes(risk));
+      });
+      const selectionCautions = unique([
+        ...weaklyRelatedPlanned.map((procedure) => `${procedureRules[procedure].name}: 현재 선택된 위험징후와 직접 연결되는 절차는 아닐 수 있습니다.`),
+        planned.length >= Object.keys(procedureRules).length
+          ? "모든 절차가 선택되어 있습니다. 누락 방지에는 도움이 되지만, 실제 감사계획에서는 위험과 주장에 직접 연결되는 절차 중심으로 우선순위를 검토해야 합니다."
+          : ""
+      ]);
+
+      const assertionCoverageScore = targetAssertions.length
+        ? Math.round((partiallyCovered.length / targetAssertions.length) * 100)
+        : 0;
+
+      const coverageRows = targetAssertions.map((assertion) => {
+        const hasCoverage = plannedAssertions.includes(assertion);
+        const directRiskMatch = risks.some((risk) => {
+          return planned.some((procedure) => procedureRules[procedure].directRisks.includes(risk) && procedureRules[procedure].assertions.includes(assertion));
+        });
+        const level = directRiskMatch ? "직접 대응" : hasCoverage ? "일부 대응" : "누락 검토";
+        const ratio = directRiskMatch ? 100 : hasCoverage ? 56 : 18;
+        return renderCoverageRow(assertion, level, ratio);
+      }).join("");
+
+      const riskPills = risks.map((risk) => `<span class="pill">${riskRules[risk].name}</span>`).join("");
+      const assertionPills = targetAssertions.map((assertion) => {
+        const cls = missingAssertions.includes(assertion) ? "pill danger" : "pill";
+        return `<span class="${cls}">${labelAssertion(assertion)}</span>`;
+      }).join("");
+
+      currentReviewState = {
+        risks,
+        accountCycle,
+        suggestedProcedures: suggestedProcedures.map((item) => item.procedure)
+      };
+
+      const procedureHtml = suggestedProcedures.length
+        ? suggestedProcedures.map(({ procedure, adjustment }) => `
+            <div class="procedure-item">
+              <div class="procedure-topline">
+                <strong>${procedureRules[procedure].name}</strong>
+                <span class="learned-score">학습 보정 ${adjustment >= 0 ? "+" : ""}${adjustment.toFixed(2)}</span>
+              </div>
+              <span>${procedureRules[procedure].note}</span>
+              <div class="feedback-actions" aria-label="${procedureRules[procedure].name} 평가">
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="helpful">도움됨</button>
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="relevant_but_lower_priority">낮은 우선순위</button>
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="not_applicable_to_case">부적합</button>
+                <button class="feedback-button" type="button" data-procedure="${procedure}" data-feedback="needs_more_information">정보 필요</button>
+              </div>
+            </div>
+          `).join("")
+        : `<p class="help-text">현재 선택한 위험징후 기준으로 즉시 추가 검토할 핵심 후보는 표시되지 않습니다.</p>`;
+
+      const weakCaution = planned.includes("ar_confirmation") && risks.includes("year_end_concentration")
+        ? ["외부조회는 매출채권 실재성 관련 증거를 제공할 수 있으나, 수익인식 시점 검토를 직접 대체하지 않을 수 있습니다."]
+        : [];
+      const riskProcedureCautions = [...riskResponseWarnings, ...selectionCautions];
+      const assertionReviewWarnings = [...assertionWarnings, ...weakCaution];
+      const totalReviewItems = riskProcedureCautions.length + assertionReviewWarnings.length;
+      const overallStatus = document.getElementById("overallStatus");
+      overallStatus.textContent = totalReviewItems === 0 ? "경고 없음" : "추가 검토 필요";
+      overallStatus.className = totalReviewItems === 0 ? "status ok" : "status warn";
+
+      document.getElementById("coverageOutput").innerHTML = `
+        <div class="output-card">
+          <h3>검토 요약</h3>
+          <div class="output-card-content">
+            <p class="help-text">아래 두 지표는 서로 다른 의미입니다. 주장 커버리지는 점수이고, 위험/절차 경고는 추가 검토 항목 수입니다.</p>
+            <div class="indicator-grid">
+              <div class="indicator">
+                <span>주장 커버리지 점수</span>
+                <strong>${assertionCoverageScore}%</strong>
+                <small>선택 절차가 관련 경영진 주장을 얼마나 포함하는지</small>
+              </div>
+              <div class="indicator">
+                <span>위험/절차 경고</span>
+                <strong>${totalReviewItems}건</strong>
+                <small>필수절차 누락, 약한 직접성, 과잉 선택 등 추가 검토 항목</small>
+              </div>
+            </div>
+            <div class="pill-list">${riskPills || '<span class="pill warn">위험징후 미선택</span>'}</div>
+            <div class="pill-list">${assertionPills}</div>
+          </div>
+        </div>
+
+        <div class="output-card">
+          <h3>주장별 커버리지</h3>
+          <div class="output-card-content">${coverageRows}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>누락 가능 절차</h3>
+          <div class="output-card-content">${procedureHtml}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>위험 대응 및 과잉 선택 점검</h3>
+          <div class="output-card-content">
+            ${renderList(riskProcedureCautions, "위험별 핵심 절차 누락 또는 과잉 선택 경고는 없습니다.")}
+          </div>
+        </div>
+
+        <div class="output-card">
+          <h3>사용자 평가 기반 로컬 학습</h3>
+          <div class="output-card-content">
+            <p class="help-text">평가는 이 브라우저에만 저장되며, 다음 추천 정렬에 최대 ±0.25 범위로만 반영됩니다. 감사 주장 매핑이나 절차 정의는 자동 변경하지 않습니다.</p>
+            ${renderLearningSummary()}
+            <div class="review-actions" style="margin-top: 12px;">
+              <button class="button secondary" type="button" id="resetLearning">학습 기록 초기화</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="output-card">
+          <h3>추가 확인 질문</h3>
+          <div class="output-card-content">${renderList(questions, "현재 선택 항목만으로 추가 질문이 생성되지 않았습니다.")}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>주장 관련 추가 검토</h3>
+          <div class="output-card-content">${renderList(assertionReviewWarnings, "선택한 계획 절차에서 즉시 표시할 주장 관련 경고는 없습니다.")}</div>
+        </div>
+
+        <div class="output-card">
+          <h3>입력 스냅샷</h3>
+          <div class="output-card-content">
+            <p class="help-text">${escapeHtml(narrative || "자유문장 입력 없음")}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById("coverageForm").addEventListener("submit", reviewCoverage);
+    document.getElementById("coverageOutput").addEventListener("click", (event) => {
+      const feedbackButton = event.target.closest(".feedback-button");
+      if (feedbackButton) {
+        const procedure = feedbackButton.dataset.procedure;
+        const feedbackType = feedbackButton.dataset.feedback;
+        saveFeedbackItem({
+          procedure,
+          procedureName: procedureRules[procedure].name,
+          feedbackType,
+          risks: currentReviewState.risks,
+          accountCycle: currentReviewState.accountCycle,
+          suggestedProcedures: currentReviewState.suggestedProcedures
+        });
+        feedbackButton.textContent = `${feedbackLabel(feedbackType)} 저장됨`;
+        reviewCoverage();
+        return;
+      }
+
+      if (event.target.closest("#resetLearning")) {
+        localStorage.removeItem(feedbackStorageKey);
+        reviewCoverage();
+      }
+    });
+    document.getElementById("riskNarrative").addEventListener("input", () => {
+      window.clearTimeout(autoDetectTimer);
+      autoDetectTimer = window.setTimeout(() => {
+        if (isAutoDetectEnabled()) {
+          detectRisksFromText({ overwrite: true, shouldReview: true });
+        } else {
+          updateAutoDetectControls();
+          reviewCoverage();
+        }
+      }, 500);
+    });
+    document.getElementById("autoDetectEnabled").addEventListener("change", () => {
+      updateAutoDetectControls();
+      if (isAutoDetectEnabled()) {
+        detectRisksFromText({ overwrite: true, shouldReview: true });
+      } else {
+        reviewCoverage();
+      }
+    });
+    document.getElementById("detectRisks").addEventListener("click", () => {
+      detectRisksFromText({ overwrite: true, shouldReview: true });
+    });
+    document.getElementById("extractRisksWithLlm").addEventListener("click", extractRisksWithLlm);
+    document.getElementById("loadCutoffCase").addEventListener("click", () => {
+      document.getElementById("riskNarrative").value = "결산일 직전 매출이 집중되었고 일부 계약에는 고객 검수조건이 포함되어 있습니다. 기말 후 반품 및 대변전표 증가 여부도 확인이 필요합니다.";
+      document.getElementById("accountCycle").value = "revenue";
+      setChecked("plannedInputs", ["cutoff_test"]);
+      if (isAutoDetectEnabled()) {
+        detectRisksFromText({ overwrite: true, shouldReview: true });
+      } else {
+        updateAutoDetectControls();
+        reviewCoverage();
+      }
+    });
+    document.getElementById("loadReceivableCase").addEventListener("click", () => {
+      document.getElementById("riskNarrative").value = "신규 거래처 매출채권의 후속 현금회수가 지연되고 장기 미회수 잔액이 증가했습니다.";
+      document.getElementById("accountCycle").value = "accounts_receivable";
+      setChecked("plannedInputs", ["ar_confirmation"]);
+      if (isAutoDetectEnabled()) {
+        detectRisksFromText({ overwrite: true, shouldReview: true });
+      } else {
+        updateAutoDetectControls();
+        reviewCoverage();
+      }
+    });
+    updateAutoDetectControls();
+    detectRisksFromText({ overwrite: true, shouldReview: true });
+  </script>
+</body>
+</html>

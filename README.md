@@ -61,6 +61,11 @@ streamlit run app.py
 - 커버리지 점검 도구에서는 사용자가 절차 후보를 평가할 수 있고, 해당 평가는 브라우저 로컬 저장소에 보관되어 다음 추천 정렬에 제한적으로 반영됩니다. 감사 
 주장 매핑과 절차 정의는 자동 변경하지 않습니다.
 
+## 데모 웹페이지(LLM API ver.)
+
+공개 URL: https://soyeon-sy-lee.github.io/revenue-audit-risk-response-mapper/index_llm_api.html
+
+LLM은 사용자가 입력한 위험상황 자유문장을 Gemini API로 보내 핵심 위험징후 태그를 추출하고, 이를 기존 규칙 기반 추천 흐름의 입력으로 활용하는 데 사용했습니다.
 
 ## 영화 추천 프로젝트에서 참고한 점
 
